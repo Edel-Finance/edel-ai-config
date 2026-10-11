@@ -30,7 +30,7 @@ complete them alone.
 
 ## Where the facts live
 
-- Developer docs: <https://docs.edel-api.xyz> (production; not live yet).
+- Developer docs: <https://docs.edel.finance/developers/overview> (live; one site for every venue).
 - REST contract: `GET https://api.edel-api.xyz/openapi.json` (production; not live yet).
 - This repo carries no SDK, CLI, MCP server, dependencies or copied contracts. See
   [AGENTS.md](AGENTS.md).

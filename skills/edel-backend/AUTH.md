@@ -33,7 +33,7 @@ to connect. Do not switch to another venue on your own; ask the owner which orig
 | REST | `https://api.edel-api.xyz` |
 | WebSocket | `wss://realtime.edel-api.xyz/streams/v1/ws` |
 | MCP | `https://mcp.edel-api.xyz/mcp` |
-| Docs | `https://docs.edel-api.xyz` |
+| Docs | `https://docs.edel.finance/developers/overview` |
 
 ## Step 0: read capabilities (no auth)
 
