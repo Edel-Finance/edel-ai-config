@@ -25,20 +25,22 @@ at `GET /openapi.json` wins when they disagree.
 
 ## Origins
 
-Development venue only. Production hostnames are not published yet.
+These are the production origins. They are not live yet: until they answer, a request fails
+to connect. Do not switch to another venue on your own; ask the owner which origin to use.
 
 | Surface | URL |
 | --- | --- |
-| REST | `https://dev.edel-api.xyz` |
-| WebSocket | `wss://realtime-dev.edel-api.xyz/streams/v1/ws` |
-| Docs | `https://dev-docs.edel-api.xyz` |
+| REST | `https://api.edel-api.xyz` |
+| WebSocket | `wss://realtime.edel-api.xyz/streams/v1/ws` |
+| MCP | `https://mcp.edel-api.xyz/mcp` |
+| Docs | `https://docs.edel.finance/developers/overview` |
 
 ## Step 0: read capabilities (no auth)
 
 This route is public and returns no secret, so a plain request is safe:
 
 ```sh
-curl --fail-with-body --silent "https://dev.edel-api.xyz/v1/auth/capabilities"
+curl --fail-with-body --silent "https://api.edel-api.xyz/v1/auth/capabilities"
 ```
 
 The response is `external-auth-capabilities/v1` with these fields:
@@ -52,8 +54,10 @@ The response is `external-auth-capabilities/v1` with these fields:
 | `socialRegistrationProviders` | Providers that can register a new user right now. May be empty. |
 | `socialLoginProviders` | Providers that can log in an existing user right now. May be empty. |
 
-Read this at the start of every session. Composition can change. There are no API keys, personal
-access tokens or credential-management routes in the public API.
+Read this at the start of every session. Composition can change. This guide covers the human
+session: a DFNS end-user bearer. Programs that trade on their own (agents, market makers) use an
+API key instead; see the API key page in the docs. There are no personal access tokens or
+credential-management routes in the public API.
 
 ## Step 1: create or reuse the signing identity
 
@@ -194,5 +198,6 @@ are not part of this onboarding.
 ## Not available today
 
 - Username or email registration, email one-time codes, lost-passkey recovery.
-- API keys or long-lived tokens. Only the DFNS end-user bearer and short-lived realtime tickets.
+- Long-lived tokens for a human session. A session uses the DFNS end-user bearer and short-lived
+  realtime tickets. API keys exist for agents and market makers, not for this flow.
 - Any unattended passkey or User Action completion.

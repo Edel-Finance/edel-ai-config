@@ -16,7 +16,8 @@ internal bot-control surfaces are not public and are out of scope.
 
 - Read [AUTH.md](AUTH.md) before any private call. Follow its order: capabilities, signing
   identity, login, account id, reads, active Party binding, then permission per money action.
-- The live contract is `GET <REST origin>/openapi.json` and <https://dev-docs.edel-api.xyz>.
+- The live contract is `GET <REST origin>/openapi.json` and
+  <https://docs.edel.finance/developers/rest-reference>.
   Do not call a route that is not in that document.
 - Never place, cancel, deposit or withdraw without an explicit owner instruction for that action.
   Preview an order with `POST /v1/orders/preview` and show the result first.
@@ -62,4 +63,5 @@ the exact owner instruction that authorized each write. Include `requestId` for 
 ## References
 
 - [AUTH.md](AUTH.md): mandatory identity, login and Party binding order, with public routes.
-- <https://dev-docs.edel-api.xyz>: generated REST and WebSocket reference.
+- <https://docs.edel.finance/developers/rest-reference> and
+  <https://docs.edel.finance/developers/realtime-reference>: generated REST and WebSocket reference.
