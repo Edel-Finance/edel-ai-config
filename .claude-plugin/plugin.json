@@ -1,0 +1,40 @@
+{
+  "name": "edel",
+  "version": "1.1.0",
+  "description": "Edel PERPS public API skill plus the public Edel MCP for Development and TestNet, authenticated with your own API key.",
+  "author": { "name": "Edel Finance" },
+  "homepage": "https://docs.edel.finance/developers/accounts/for-agents",
+  "repository": "https://github.com/Edel-Finance/edel-ai-config",
+  "userConfig": {
+    "development_api_key": {
+      "type": "string",
+      "title": "Development MCP API key",
+      "description": "Your own Edel API key for Development (edel_ak_...), approved with your passkey. Stored in the OS secure credential store. Leave empty to skip Development.",
+      "sensitive": true,
+      "required": false
+    },
+    "testnet_api_key": {
+      "type": "string",
+      "title": "TestNet MCP API key",
+      "description": "Your own Edel API key for TestNet (edel_ak_...), approved with your passkey. Stored in the OS secure credential store. Leave empty to skip TestNet.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "mcpServers": {
+    "edel-development": {
+      "type": "http",
+      "url": "https://mcp-dev.edel-api.xyz/mcp",
+      "headers": { "Authorization": "Bearer ${user_config.development_api_key}" }
+    },
+    "edel-testnet": {
+      "type": "http",
+      "url": "https://mcp-testnet.edel-api.xyz/mcp",
+      "headers": { "Authorization": "Bearer ${user_config.testnet_api_key}" }
+    },
+    "edel-production": {
+      "type": "http",
+      "url": ""
+    }
+  }
+}

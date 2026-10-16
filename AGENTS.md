@@ -1,12 +1,21 @@
 # Agent rules for edel-ai-config
 
-This repository distributes agent skills for the Edel PERPS public API. Nothing else.
+This repository distributes agent skills and MCP client configuration for the Edel PERPS public
+API. Nothing else.
 
 ## Scope
 
-- Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, and `skills/<name>/SKILL.md` with its
-  local references. Install path is `npx skills add Edel-Finance/edel-ai-config`.
-- No application code, CLI, SDK, MCP server, package manifest, lockfile or dependency.
+- Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
+  references, the Claude Code plugin manifests in `.claude-plugin/`, the generic client config in
+  `mcp/`, and the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and the offline
+  `check.sh` that tests them). Install paths are
+  `npx skills add Edel-Finance/edel-ai-config` and `claude plugin install edel@edel-ai-config`.
+- No application code, SDK, MCP server, package manifest, lockfile or dependency. The helpers use
+  only `bash`, `curl` and the OS credential tool.
+- MCP configs point only at the public MCP URL of each environment, as published in the public
+  docs. Production stays a disabled placeholder until its MCP is public.
+- MCP auth uses the user's own API key from the OS secure store or an environment variable. Never a
+  key in a repo file or on a command line, and never another person's browser session.
 - No copied OpenAPI, AsyncAPI, Postman or realtime contract files. Link to the live docs and the
   live `GET /openapi.json` instead. Copies drift.
 - Public API only. Document the routes and channels in the public OpenAPI and AsyncAPI documents,
@@ -32,6 +41,10 @@ This repository distributes agent skills for the Edel PERPS public API. Nothing 
   and stop. No blind retry and no invented diagnosis.
 - Never invent an endpoint. Every route named here must exist in the live OpenAPI document. Mark
   unavailable paths as unavailable, do not work around them.
+
+- The scripts treat every remote value as untrusted. Check each one against a strict pattern
+  before use, numbers as digits only before any bash arithmetic, and stop with a line that names a
+  missing field. Run `scripts/check.sh` after any script change.
 
 ## Style
 
