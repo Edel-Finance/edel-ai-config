@@ -47,16 +47,17 @@ This route is public and returns no secret, so a plain request is safe:
 curl --fail-with-body --silent "https://testnet.edel-api.xyz/v1/auth/capabilities"
 ```
 
-The response is `external-auth-capabilities/v1` with these fields:
+The response is `external-auth-capabilities/v1`. The field table in the
+[introduction](https://docs.edel.finance/developers/introduction) is the source; quoted here:
 
-| Field | Meaning |
-| --- | --- |
-| `passkeyLogin` | `available` or `dfns_not_configured`. |
-| `delegatedRegistration` | `product_identity_required` today. Username or email registration is unavailable. |
-| `emailOtp` | `email_otp_provider_required`. Unavailable. |
-| `credentialRecovery` | `credential_recovery_not_configured`. Lost-passkey recovery is unavailable. |
-| `socialRegistrationProviders` | Providers that can register a new user right now. May be empty. |
-| `socialLoginProviders` | Providers that can log in an existing user right now. May be empty. |
+> | Field | Values | What your client does |
+> | --- | --- | --- |
+> | `passkeyLogin` | `available` or `dfns_not_configured` | Offer passkey login only when `available`. |
+> | `socialRegistrationProviders` | A list such as `["google"]`, or `[]` | Offer registration only through a listed provider. An empty list means registration is closed. |
+> | `socialLoginProviders` | A list such as `["google"]`, or `[]` | Offer social login only through a listed provider. |
+> | `delegatedRegistration` | `product_identity_required` or `dfns_not_configured` | Username or email registration is not offered. |
+> | `emailOtp` | Always `email_otp_provider_required` | Email one-time codes are not offered. |
+> | `credentialRecovery` | Always `credential_recovery_not_configured` | Lost-passkey recovery is not offered. |
 
 Read this at the start of every session. Composition can change. Steps 1 and 2 cover the human
 session: a DFNS end-user bearer. An agent uses an owner-approved API key instead (step 2b). There

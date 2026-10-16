@@ -5,9 +5,10 @@ calls, the API key scope and the docs page that owns the facts. Before you use a
 docs page and the route description in the live `GET <REST origin>/openapi.json`. Limits,
 fields, statuses and error codes live there. Do not copy them from here or from memory.
 
-The CI check in this repo fails when a tool or route named here is missing from the generated
-MCP parity map or the OpenAPI document. A capability that is absent from the live contract of
-your venue is unavailable there.
+The CI check in this repo fails when a tool named here is missing from the live MCP tools docs
+page (<https://docs.edel.finance/developers/mcp/tools>) or a route named here is missing from the
+live TestNet `GET /openapi.json`. A capability that is absent from the live contract of your venue
+is unavailable there.
 
 Docs root: <https://docs.edel.finance/developers/overview>.
 
@@ -64,9 +65,15 @@ tools. The server fills `accountId` from the key.
 | Position history | `edel_position_history` | `GET /v1/accounts/{accountId}/positions/history` | `read` | same |
 | Funding paid per position | `edel_funding` | `GET /v1/accounts/{accountId}/positions/history` | `read` | same |
 
-The docs say take profit and stop loss travel as `autoClose` on an order. The public contract
-has no standalone trigger route and no `timeInForce` on `/v1`, so no tool offers them.
-`edel_funding` is cumulative funding per position episode, not a per-payment ledger.
+From [for-agents](https://docs.edel.finance/developers/accounts/for-agents):
+
+> Take profit and stop loss travel as `autoClose` (`takeProfitPriceAtoms`, `stopLossPriceAtoms`)
+> on `edel_place_order` and on each `edel_place_order_batch` entry. The public contract has no
+> standalone trigger arm, cancel or replace route and no `timeInForce` on `/v1`, so no tool
+> offers them.
+
+> `fundingPaidAtoms` is cumulative funding paid per episode. It is not per-payment funding
+> history; the API does not serve that ledger, and this tool never invents payment rows.
 
 ## Deposits and withdrawals
 
@@ -88,10 +95,14 @@ browser. Each money action needs separate owner permission.
 
 ## Strategy agents
 
-Agents run a deterministic Pine strategy in paper mode. They record simulated fills and never
-place a real order or move funds. The opt-in `agents` scope covers these routes; a human must
-approve it. Read each route description for its limits and the venues that offer it. Elsewhere
-a route answers `503 operation_not_available`.
+From the `agents` scope row of [for-agents](https://docs.edel.finance/developers/accounts/for-agents#what-a-key-can-do):
+
+> Opt-in, never requested by default, and only a key the owner approved with a passkey through
+> agent connect may hold it; a bot key cannot. [...] Agents run in paper mode only: they place no
+> venue order and move no funds, and the scope adds no trading.
+
+Read each route description in the live OpenAPI document for its limits and the venues that
+offer it.
 
 | Capability | MCP tool | REST route | Scope | Docs |
 | --- | --- | --- | --- | --- |
@@ -127,10 +138,19 @@ Routes under `/v2/not-implemented/` always answer `501`. Do not call them.
 
 ## Owner only (no tool, no key)
 
-The API refuses every API key on these. They need the owner's passkey session in a browser:
-login and registration, Party binding (`POST /v1/accounts/{accountId}/party` and its
-`complete` and `consent` routes), agent approval, API key listing and revocation, affiliate
-earnings and profile, KYC skip and favorites. Do not try to reach them with a key.
+The MCP exclusions table of [for-agents](https://docs.edel.finance/developers/accounts/for-agents) gives the reason for each route. Two rows
+cover these:
+
+> The flow needs the owner's passkey, social sign-in or local signing ceremony in a browser,
+> which an agent cannot perform.
+
+> The API refuses every API key on this route with 403 passkey_required; widening the key
+> allowlist is an owner security decision.
+
+The routes in those rows include login and registration, Party binding
+(`POST /v1/accounts/{accountId}/party` and its `complete` and `consent` routes), agent approval,
+API key listing and revocation, affiliate earnings and profile, KYC skip and favorites. Do not
+try to reach them with a key.
 
 ## Realtime tickets
 
