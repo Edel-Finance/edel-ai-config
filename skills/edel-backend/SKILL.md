@@ -63,5 +63,6 @@ the exact owner instruction that authorized each write. Include `requestId` for 
 ## References
 
 - [AUTH.md](AUTH.md): mandatory identity, login and Party binding order, with public routes.
+- `mcp/README.md` at the repository root: the public MCP per environment and its API key setup.
 - <https://docs.edel.finance/developers/rest-reference> and
   <https://docs.edel.finance/developers/realtime-reference>: generated REST and WebSocket reference.
