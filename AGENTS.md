@@ -4,8 +4,12 @@ This repository distributes agent skills for the Edel PERPS public API. Nothing 
 
 ## Scope
 
-- Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, and `skills/<name>/SKILL.md` with its
-  local references. Install path is `npx skills add Edel-Finance/edel-ai-config`.
+- Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its
+  local references, and the `contract-names` CI check in `.github/`. Install path is
+  `npx skills add Edel-Finance/edel-ai-config`.
+- The docs are the source of truth. A skill points at the docs page or the live contract and
+  quotes it. It never states a limit, scope, field or status from memory.
+- The `contract-names` check reads only public sources and needs no secret. Never add a token.
 - No application code, CLI, SDK, MCP server, package manifest, lockfile or dependency.
 - No copied OpenAPI, AsyncAPI, Postman or realtime contract files. Link to the live docs and the
   live `GET /openapi.json` instead. Copies drift.
@@ -30,8 +34,9 @@ This repository distributes agent skills for the Edel PERPS public API. Nothing 
   approves each one in a browser.
 - On `401` or `403`, classify (authentication rejected, forbidden), read the documented `code`,
   and stop. No blind retry and no invented diagnosis.
-- Never invent an endpoint. Every route named here must exist in the live OpenAPI document. Mark
-  unavailable paths as unavailable, do not work around them.
+- Never invent an endpoint. Every route named here must exist in the live OpenAPI document, and
+  every MCP tool on the public MCP tools page; CI enforces both. Mark unavailable paths as
+  unavailable, do not work around them.
 
 ## Style
 

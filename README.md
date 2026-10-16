@@ -9,8 +9,10 @@ agent read the Edel developer docs and trade only after you say so.
 npx skills add Edel-Finance/edel-ai-config
 ```
 
-This adds one skill, `edel-backend`, to your agent. The skill reads
-`skills/edel-backend/AUTH.md` before any private call.
+This adds one skill, `edel-markets`, to your agent. It covers every public Edel PERPS capability:
+REST, CCXT `/v2`, WebSockets, MCP tools, paper strategy agents, deposits and withdrawals. The skill
+reads `skills/edel-markets/AUTH.md` before any private call and finds each capability in
+`skills/edel-markets/CAPABILITIES.md`.
 
 ## Onboarding
 
@@ -18,7 +20,7 @@ Do these steps in order. Steps 2 and 4 need a human with a browser and a passkey
 complete them alone.
 
 1. Install the skill with the command above.
-2. Read [skills/edel-backend/AUTH.md](skills/edel-backend/AUTH.md). Create or reuse your signing
+2. Read [skills/edel-markets/AUTH.md](skills/edel-markets/AUTH.md). Create or reuse your signing
    identity (passkey plus delegated signing key), then log in. Login returns a bearer token. The
    agent keeps it in memory and never prints it.
 3. Let the agent run the read-only sanity check in AUTH.md: capabilities, account id, markets,
@@ -30,8 +32,14 @@ complete them alone.
 
 ## Where the facts live
 
+The docs are the source of truth. The skill points at them and quotes them; it does not restate
+facts from memory.
+
 - Developer docs: <https://docs.edel.finance/developers/overview> (live; one site for every venue).
-- REST contract: `GET https://api.edel-api.xyz/openapi.json` (production; not live yet).
+- REST contract: `GET <REST origin>/openapi.json` of the venue you use. The origins per venue are
+  in `skills/edel-markets/AUTH.md`.
+- CI: `.github/workflows/contract-names.yml` fails when the skill names an MCP tool or a REST
+  route that the published contract does not have.
 - This repo carries no SDK, CLI, MCP server, dependencies or copied contracts. See
   [AGENTS.md](AGENTS.md).
 
