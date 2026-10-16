@@ -123,6 +123,19 @@ Source: <https://docs.edel.finance/developers/accounts/for-agents> ("Connect wit
 `GET /v1/api-keys/current` confirms the key's scopes and expiry. A key never signs, never changes
 the Party binding and never approves another agent. Only the owner lists or revokes keys.
 
+## Passkeys belong to one venue
+
+Each venue has its own passkey relying party. A passkey made on Testnet never signs on
+Development, and one made on a retired address signs nowhere. Read them with `edel_passkeys` (or
+`GET /v1/accounts/{accountId}/passkeys`): each has a `status` of `usable_here`,
+`other_relying_party` or `inactive`. `edel_me` (`GET /v1/me`) returns the same list inside the
+owner's whole profile; a section it cannot read is null and named in `unavailable`.
+
+- No `usable_here` passkey: the owner cannot sign in or approve anything in this venue, and no
+  passkey can approve a new one. Tell the owner to contact support. Do not retry login.
+- Adding, naming and removing a passkey is the owner's, in the browser (Settings, Profile). A key
+  never reaches those routes. There is no rename and no last-used time.
+
 ## Step 3: learn the account id
 
 ```text

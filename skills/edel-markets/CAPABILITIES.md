@@ -34,6 +34,8 @@ tools. The server fills `accountId` from the key.
 | Account readiness and Party status | `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` | `read` | [for-agents](https://docs.edel.finance/developers/accounts/for-agents) |
 | Account snapshot | `edel_account` | `GET /v1/accounts/{accountId}` | `read` | [rest-reference](https://docs.edel.finance/developers/rest-reference) |
 | KYC state | `edel_kyc_status` | `GET /v1/accounts/{accountId}/kyc` | `read` | [kyc-policy](https://docs.edel.finance/developers/accounts/kyc-policy) |
+| The owner's own profile (email, sign-in providers, passkeys, KYC, Party, key metadata) | `edel_me` | `GET /v1/me` | `read` | [rest-reference](https://docs.edel.finance/developers/rest-reference) |
+| The owner's passkeys and their status in this venue | `edel_passkeys` | `GET /v1/accounts/{accountId}/passkeys` | `read` | [for-humans](https://docs.edel.finance/developers/accounts/for-humans) |
 
 ## Markets
 
@@ -149,8 +151,9 @@ cover these:
 
 The routes in those rows include login and registration, Party binding
 (`POST /v1/accounts/{accountId}/party` and its `complete` and `consent` routes), agent approval,
-API key listing and revocation, affiliate earnings and profile, KYC skip and favorites. Do not
-try to reach them with a key.
+API key listing and revocation, adding and removing a passkey
+(`POST /v1/accounts/{accountId}/passkeys` and `POST /v1/accounts/{accountId}/passkeys/{passkeyId}/remove`),
+affiliate earnings and profile, KYC skip and favorites. Do not try to reach them with a key.
 
 ## Realtime tickets
 
