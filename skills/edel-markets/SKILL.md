@@ -68,3 +68,4 @@ each write, and `requestId` for every failure.
 
 - [AUTH.md](AUTH.md): origins, identity, API key, login and Party binding order.
 - [CAPABILITIES.md](CAPABILITIES.md): every public capability with its tool, route, scope and docs page.
+- `mcp/README.md` at the repository root: the public MCP per environment and its API key setup.
