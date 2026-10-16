@@ -31,8 +31,15 @@ key_var() {
 field() {
   # Print one top-level JSON string or boolean field, or "-" when it is absent.
   local value
-  value=$(printf '%s' "$2" | grep -o "\"$1\":\(\"[^\"]*\"\|true\|false\|null\)" | head -1 | cut -d: -f2- | tr -d '"')
+  # Only letters, digits and . _ : / - survive, so a remote value cannot drive the terminal.
+  value=$({ printf '%s' "$2" | grep -o "\"$1\":\(\"[^\"]*\"\|true\|false\|null\)" || true; } |
+    head -1 | cut -d: -f2- | tr -cd 'A-Za-z0-9._:/-' | cut -c1-200)
   printf '%s' "${value:--}"
+}
+
+safe_status() {
+  # An HTTP status from curl, or "none" when the request did not complete.
+  if [[ $1 =~ ^[0-9]{3}$ ]]; then printf '%s' "$1"; else printf 'none'; fi
 }
 
 # POST one JSON-RPC body to /mcp. The Authorization header travels in a curl config read from stdin.
@@ -43,12 +50,12 @@ rpc() {
       curl -sS -m 30 --config - -X POST "$origin/mcp" \
         -H 'content-type: application/json' \
         -H 'accept: application/json, text/event-stream' \
-        --data "$body" -w '\n%{http_code}'
+        --data "$body" -w '\n%{http_code}' || true
   else
     curl -sS -m 30 -X POST "$origin/mcp" \
       -H 'content-type: application/json' \
       -H 'accept: application/json, text/event-stream' \
-      --data "$body" -w '\n%{http_code}'
+      --data "$body" -w '\n%{http_code}' || true
   fi
 }
 
@@ -76,7 +83,7 @@ smoke() {
   echo "ready: $(field status "$payload")"
 
   answer=$(rpc "$origin" "" '{"jsonrpc":"2.0","id":1,"method":"tools/list"}')
-  status=${answer##*$'\n'}
+  status=$(safe_status "${answer##*$'\n'}")
   payload=${answer%$'\n'*}
   echo "no key: HTTP $status reason=$(field reason "$payload")"
   [ "$status" = 401 ] || failures=$((failures + 1))
@@ -89,7 +96,7 @@ smoke() {
   fi
 
   answer=$(rpc "$origin" "$key" '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"edel-ai-config-smoke","version":"1"}}}')
-  status=${answer##*$'\n'}
+  status=$(safe_status "${answer##*$'\n'}")
   echo "initialize: HTTP $status"
   if [ "$status" != 200 ]; then
     payload=${answer%$'\n'*}
@@ -99,15 +106,20 @@ smoke() {
   fi
 
   answer=$(rpc "$origin" "$key" '{"jsonrpc":"2.0","id":2,"method":"tools/list"}')
-  status=${answer##*$'\n'}
+  status=$(safe_status "${answer##*$'\n'}")
   payload=${answer%$'\n'*}
   local tools
-  tools=$(printf '%s' "$payload" | grep -o '"name":"edel_[a-z_]*"' | sort -u | wc -l | tr -d ' ')
+  tools=$({ printf '%s' "$payload" | grep -o '"name":"edel_[a-z_]*"' || true; } | sort -u | wc -l | tr -d ' ')
+  if [ "$tools" = 0 ]; then
+    echo "tools/list: HTTP $status error: the response has no result.tools[].name field with an edel_ tool"
+    failures=$((failures + 1))
+    return
+  fi
   echo "tools/list: HTTP $status tools=$tools edel_markets=$(printf '%s' "$payload" | grep -q '"name":"edel_markets"' && echo true || echo false)"
-  [ "$status" = 200 ] && [ "$tools" -gt 0 ] || failures=$((failures + 1))
+  [ "$status" = 200 ] || failures=$((failures + 1))
 
   answer=$(rpc "$origin" "$key" '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"edel_markets","arguments":{}}}')
-  status=${answer##*$'\n'}
+  status=$(safe_status "${answer##*$'\n'}")
   payload=${answer%$'\n'*}
   echo "edel_markets: HTTP $status isError=$(field isError "$payload")"
   [ "$status" = 200 ] && [ "$(field isError "$payload")" != true ] || failures=$((failures + 1))

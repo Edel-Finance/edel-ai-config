@@ -33,9 +33,38 @@ case "$scopes" in
 esac
 
 field() {
-  # One top-level JSON string or number field, or empty.
-  printf '%s' "$2" | grep -o "\"$1\":\(\"[^\"]*\"\|[0-9]*\)" | head -1 | cut -d: -f2- | tr -d '"'
+  # One top-level JSON string or number field, or empty. A missing field is not an error here.
+  { printf '%s' "$2" | grep -o "\"$1\":\(\"[^\"]*\"\|[0-9]*\)" || true; } | head -1 | cut -d: -f2- | tr -d '"'
 }
+
+safe() {
+  # A remote value made safe to print: only letters, digits and . _ : / - survive.
+  printf '%s' "$1" | tr -cd 'A-Za-z0-9._:/-' | cut -c1-200
+}
+
+need() {
+  # Print the field $1 from body $2 when it matches the pattern $3. Otherwise name the field and stop.
+  # The value is never printed, because it can be a key.
+  local value
+  value=$(field "$1" "$2")
+  if [ -z "$value" ]; then
+    echo "the response has no $1 field. Run the script again or report it with requestId=$(safe "$(field requestId "$2")")" >&2
+    exit 1
+  fi
+  if ! [[ $value =~ $3 ]]; then
+    echo "the response field $1 has an unexpected format. Refused." >&2
+    exit 1
+  fi
+  printf '%s' "$value"
+}
+
+# Patterns for every remote value the script uses. Numbers are digits only, checked before any
+# arithmetic, so a value such as PATH[$(cmd)] can never reach bash arithmetic.
+number_re='^[0-9]{1,6}$'
+token_re='^[A-Za-z0-9._-]{1,255}$'
+user_code_re='^[A-Za-z0-9-]{1,64}$'
+url_re='^https://[A-Za-z0-9.-]+(/[A-Za-z0-9._~/?=&%-]*)?$'
+key_re='^edel_ak_[A-Za-z0-9_-]{1,255}$'
 
 post() {
   # POST a JSON body read from stdin. Prints the body, then the HTTP status on the last line.
@@ -47,16 +76,21 @@ answer=$(printf '{"clientName":"edel-ai-config","scopes":[%s]}' "${scope_list%,}
 status=${answer##*$'\n'}
 body=${answer%$'\n'*}
 if [ "$status" != 201 ]; then
-  echo "start refused: HTTP $status code=$(field code "$body") requestId=$(field requestId "$body")" >&2
+  echo "start refused: HTTP $(safe "$status") code=$(safe "$(field code "$body")") requestId=$(safe "$(field requestId "$body")")" >&2
   exit 1
 fi
-connect_code=$(field connectCode "$body")
-interval=$(field intervalSeconds "$body")
-expires=$(field expiresInSeconds "$body")
+connect_code=$(need connectCode "$body" "$token_re")
+interval=$(need intervalSeconds "$body" "$number_re")
+expires=$(need expiresInSeconds "$body" "$number_re")
+page=$(need verificationUrl "$body" "$url_re")
+user_code=$(need userCode "$body" "$user_code_re")
+interval=$((10#$interval))
+expires=$((10#$expires))
+[ "$interval" -ge 1 ] || interval=5
 
 echo "Open this page in your own browser, sign in with your passkey, check the code and approve:"
-echo "  page:   $(field verificationUrl "$body")"
-echo "  code:   $(field userCode "$body")"
+echo "  page:   $page"
+echo "  code:   $user_code"
 echo "  scopes: $scopes"
 echo "Waiting up to ${expires}s for your approval."
 
@@ -69,10 +103,10 @@ while [ "$SECONDS" -lt "$deadline" ]; do
   body=${answer%$'\n'*}
   case "$(field status "$body")" in
     authorization_pending) ;;
-    slow_down) interval=$((interval + 5)) ;;
-    approved) api_key=$(field apiKey "$body"); break ;;
+    slow_down) [ "$interval" -ge 60 ] || interval=$((interval + 5)) ;;
+    approved) api_key=$(need apiKey "$body" "$key_re"); break ;;
     expired) echo "The approval expired. Run the script again." >&2; exit 1 ;;
-    *) echo "complete refused: HTTP $status code=$(field code "$body") requestId=$(field requestId "$body")" >&2; exit 1 ;;
+    *) echo "complete refused: HTTP $(safe "$status") code=$(safe "$(field code "$body")") requestId=$(safe "$(field requestId "$body")")" >&2; exit 1 ;;
   esac
 done
 unset connect_code

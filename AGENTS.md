@@ -7,7 +7,8 @@ API. Nothing else.
 
 - Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
   references, the Claude Code plugin manifests in `.claude-plugin/`, the generic client config in
-  `mcp/`, and the two shell helpers in `scripts/` (`connect.sh`, `smoke.sh`). Install paths are
+  `mcp/`, and the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and the offline
+  `check.sh` that tests them). Install paths are
   `npx skills add Edel-Finance/edel-ai-config` and `claude plugin install edel@edel-ai-config`.
 - No application code, SDK, MCP server, package manifest, lockfile or dependency. The helpers use
   only `bash`, `curl` and the OS credential tool.
@@ -40,6 +41,10 @@ API. Nothing else.
   and stop. No blind retry and no invented diagnosis.
 - Never invent an endpoint. Every route named here must exist in the live OpenAPI document. Mark
   unavailable paths as unavailable, do not work around them.
+
+- The scripts treat every remote value as untrusted. Check each one against a strict pattern
+  before use, numbers as digits only before any bash arithmetic, and stop with a line that names a
+  missing field. Run `scripts/check.sh` after any script change.
 
 ## Style
 

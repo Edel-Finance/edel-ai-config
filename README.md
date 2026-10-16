@@ -62,6 +62,8 @@ an environment variable or the macOS Keychain. It also has the smoke test:
 scripts/smoke.sh development testnet
 ```
 
+`scripts/check.sh` tests both scripts offline with a fake `curl`. It needs no key and no network.
+
 ## Onboarding for direct API use
 
 Do these steps in order. Steps 2 and 4 need a human with a browser and a passkey. An agent cannot
