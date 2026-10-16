@@ -7,9 +7,12 @@ API. Nothing else.
 
 - Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
   references, the Claude Code plugin manifests in `.claude-plugin/`, the generic client config in
-  `mcp/`, and the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and the offline
-  `check.sh` that tests them). Install paths are
+  `mcp/`, the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and the offline `check.sh`
+  that tests them), and the `contract-names` CI check in `.github/`. Install paths are
   `npx skills add Edel-Finance/edel-ai-config` and `claude plugin install edel@edel-ai-config`.
+- The docs are the source of truth. A skill points at the docs page or the live contract and
+  quotes it. It never states a limit, scope, field or status from memory.
+- The `contract-names` check reads only public sources and needs no secret. Never add a token.
 - No application code, SDK, MCP server, package manifest, lockfile or dependency. The helpers use
   only `bash`, `curl` and the OS credential tool.
 - MCP configs point only at the public MCP URL of each environment, as published in the public
@@ -39,8 +42,9 @@ API. Nothing else.
   approves each one in a browser.
 - On `401` or `403`, classify (authentication rejected, forbidden), read the documented `code`,
   and stop. No blind retry and no invented diagnosis.
-- Never invent an endpoint. Every route named here must exist in the live OpenAPI document. Mark
-  unavailable paths as unavailable, do not work around them.
+- Never invent an endpoint. Every route named here must exist in the live OpenAPI document, and
+  every MCP tool on the public MCP tools page; CI enforces both. Mark unavailable paths as
+  unavailable, do not work around them.
 
 - The scripts treat every remote value as untrusted. Check each one against a strict pattern
   before use, numbers as digits only before any bash arithmetic, and stop with a line that names a

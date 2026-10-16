@@ -25,39 +25,43 @@ at `GET /openapi.json` wins when they disagree.
 
 ## Origins
 
-These are the production origins. They are not live yet: until they answer, a request fails
-to connect. Do not switch to another venue on your own; ask the owner which origin to use.
+Use the origins of one venue for REST, WebSocket and MCP. Never mix venues, and never switch
+venue on your own; ask the owner. The docs page
+<https://docs.edel.finance/developers/introduction> ("Base URLs") is the source. When it and
+this table disagree, the docs page wins.
 
-| Surface | URL |
-| --- | --- |
-| REST | `https://api.edel-api.xyz` |
-| WebSocket | `wss://realtime.edel-api.xyz/streams/v1/ws` |
-| MCP | `https://mcp.edel-api.xyz/mcp` |
-| Docs | `https://docs.edel.finance/developers/overview` |
+| Venue | REST (and `/openapi.json`) | WebSocket | MCP |
+| --- | --- | --- | --- |
+| Testnet | `https://testnet.edel-api.xyz` | `wss://realtime-testnet.edel-api.xyz/streams/v1/ws` | `https://mcp-testnet.edel-api.xyz/mcp` |
+| Development | `https://dev.edel-api.xyz` | `wss://realtime-dev.edel-api.xyz/streams/v1/ws` | `https://mcp-dev.edel-api.xyz/mcp` |
+| Mainnet | Not published. | Not published. | Not published. |
+
+The docs say an MCP endpoint must be provisioned and verified by the venue's rollout. If an
+origin does not answer, report it. Do not guess another host.
 
 ## Step 0: read capabilities (no auth)
 
 This route is public and returns no secret, so a plain request is safe:
 
 ```sh
-curl --fail-with-body --silent "https://api.edel-api.xyz/v1/auth/capabilities"
+curl --fail-with-body --silent "https://testnet.edel-api.xyz/v1/auth/capabilities"
 ```
 
-The response is `external-auth-capabilities/v1` with these fields:
+The response is `external-auth-capabilities/v1`. The field table in the
+[introduction](https://docs.edel.finance/developers/introduction) is the source; quoted here:
 
-| Field | Meaning |
-| --- | --- |
-| `passkeyLogin` | `available` or `dfns_not_configured`. |
-| `delegatedRegistration` | `product_identity_required` today. Username or email registration is unavailable. |
-| `emailOtp` | `email_otp_provider_required`. Unavailable. |
-| `credentialRecovery` | `credential_recovery_not_configured`. Lost-passkey recovery is unavailable. |
-| `socialRegistrationProviders` | Providers that can register a new user right now. May be empty. |
-| `socialLoginProviders` | Providers that can log in an existing user right now. May be empty. |
+> | Field | Values | What your client does |
+> | --- | --- | --- |
+> | `passkeyLogin` | `available` or `dfns_not_configured` | Offer passkey login only when `available`. |
+> | `socialRegistrationProviders` | A list such as `["google"]`, or `[]` | Offer registration only through a listed provider. An empty list means registration is closed. |
+> | `socialLoginProviders` | A list such as `["google"]`, or `[]` | Offer social login only through a listed provider. |
+> | `delegatedRegistration` | `product_identity_required` or `dfns_not_configured` | Username or email registration is not offered. |
+> | `emailOtp` | Always `email_otp_provider_required` | Email one-time codes are not offered. |
+> | `credentialRecovery` | Always `credential_recovery_not_configured` | Lost-passkey recovery is not offered. |
 
-Read this at the start of every session. Composition can change. This guide covers the human
-session: a DFNS end-user bearer. Programs that trade on their own (agents, market makers) use an
-API key instead; see the API key page in the docs. There are no personal access tokens or
-credential-management routes in the public API.
+Read this at the start of every session. Composition can change. Steps 1 and 2 cover the human
+session: a DFNS end-user bearer. An agent uses an owner-approved API key instead (step 2b). There
+are no personal access tokens in the public API.
 
 ## Step 1: create or reuse the signing identity
 
@@ -103,6 +107,21 @@ as `Authorization: Bearer <token>` on private REST routes only. Ignore `walletSt
 session.bearer = loginComplete.token        // never printed, never on argv
 report({ status: 200, authenticated: true })
 ```
+
+## Step 2b: connect an agent with an API key (human approves)
+
+Source: <https://docs.edel.finance/developers/accounts/for-agents> ("Connect with an API key").
+
+1. `POST /v1/agent-connect/start` with `clientName` and the smallest `scopes` the task needs.
+   `agents` and `funding` are opt-in; ask for them only when the owner wants them.
+2. Show the owner `verificationUrl` and `userCode`. **Human:** the owner approves with a passkey.
+3. Poll `POST /v1/agent-connect/complete` with `connectCode` every `intervalSeconds`, as the
+   docs page says. It returns `apiKey` exactly once.
+4. Send `Authorization: Bearer <apiKey>`. Keep the key in a file only you can read. For MCP, put
+   the same header on every request.
+
+`GET /v1/api-keys/current` confirms the key's scopes and expiry. A key never signs, never changes
+the Party binding and never approves another agent. Only the owner lists or revokes keys.
 
 ## Step 3: learn the account id
 
@@ -171,19 +190,20 @@ Only after steps 0 to 5 pass, and only on an explicit owner instruction naming t
 1. `POST /v1/orders/preview` with the intended order. It reserves nothing and needs no
    `Idempotency-Key`.
 2. Show the preview. Wait for a "yes".
-3. `POST /v1/orders` with a fresh `Idempotency-Key` header. The contract requires that header on
-   order placement, order cancellation, withdrawals and social registration; other routes do not
-   take it. Required body fields: `accountId`, `marketId`, `clientOrderId`, `side`, `orderType`,
+3. `POST /v1/orders` with a fresh `Idempotency-Key` header. Send that header on every route
+   where the live contract marks it required. Required body fields: `accountId`, `marketId`, `clientOrderId`, `side`, `orderType`,
    and `quantity` or `notional`; a limit order also needs `price`. The response is accepted for
    asynchronous processing; watch `account.orders` on the WebSocket for the outcome.
 
-Funding and withdrawals are owner-signed DFNS actions and need separate explicit permission. They
-are not part of this onboarding.
+Deposits and withdrawals are owner-signed DFNS actions and need separate explicit permission. See
+the funding section of [CAPABILITIES.md](CAPABILITIES.md).
 
 ## Limits and errors
 
-- Public auth routes: 20 requests per 60 seconds per client IP.
-- Authenticated routes: 600 requests per minute per bearer. Ticket minting counts.
+Read the current limits in the docs ("Rate limits and back-pressure" in
+<https://docs.edel.finance/developers/introduction>) and in each route description. At the time
+of writing the docs say: public auth is limited to 20 requests per 60 seconds per trusted client
+IP, and a venue allows 600 authenticated requests per 60 seconds by default.
 - Failures use `external-rest-error/v1`: `code`, `safeMessage`, `retryable`, `recoveryActions`,
   `requestId`. Report `code`, `retryable`, `recoveryActions` and `requestId` only.
 
@@ -199,5 +219,5 @@ are not part of this onboarding.
 
 - Username or email registration, email one-time codes, lost-passkey recovery.
 - Long-lived tokens for a human session. A session uses the DFNS end-user bearer and short-lived
-  realtime tickets. API keys exist for agents and market makers, not for this flow.
+  realtime tickets. API keys are for agents and market makers, and they expire.
 - Any unattended passkey or User Action completion.
