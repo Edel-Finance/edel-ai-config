@@ -133,8 +133,8 @@ owner's whole profile; a section it cannot read is null and named in `unavailabl
 
 - No `usable_here` passkey: the owner cannot sign in or approve anything in this venue, and no
   passkey can approve a new one. Tell the owner to contact support. Do not retry login.
-- Adding, naming and removing a passkey is the owner's, in the browser (Settings, Profile). A key
-  never reaches those routes. There is no rename and no last-used time.
+- Adding and naming a passkey is the owner's, in the browser (Settings, Profile). A key never
+  reaches that route. There is no rename, no removal route yet and no last-used time.
 
 ## Step 3: learn the account id
 

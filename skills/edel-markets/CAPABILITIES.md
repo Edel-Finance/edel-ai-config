@@ -151,8 +151,7 @@ cover these:
 
 The routes in those rows include login and registration, Party binding
 (`POST /v1/accounts/{accountId}/party` and its `complete` and `consent` routes), agent approval,
-API key listing and revocation, adding and removing a passkey
-(`POST /v1/accounts/{accountId}/passkeys` and `POST /v1/accounts/{accountId}/passkeys/{passkeyId}/remove`),
+API key listing and revocation, adding a passkey (`POST /v1/accounts/{accountId}/passkeys`),
 affiliate earnings and profile, KYC skip and favorites. Do not try to reach them with a key.
 
 ## Realtime tickets
