@@ -5,7 +5,12 @@ name: sync-public-tools
 # contract-names check reads. When the file changes it rebuilds the fixed branch below from main
 # and opens or updates one pull request; it never pushes to main. A run with no change posts
 # nothing. It runs 30 minutes after the edel-docs sync so a merged docs change is already live.
+# The backend also dispatches `backend-contracts-changed` after a main merge that changes its
+# generated contracts. When the contract-names check passes on the rewrite, the job merges its own
+# pull request, so no sync pull request waits.
 on:
+  repository_dispatch:
+    types: [backend-contracts-changed]
   schedule:
     - cron: "53 * * * *"
   workflow_dispatch:
@@ -27,6 +32,21 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      # A push or pull request made with GITHUB_TOKEN leaves the pull request's CI waiting for a
+      # maintainer's approval. A token of the sync GitHub App (variable SYNC_APP_ID, secret
+      # SYNC_APP_PRIVATE_KEY), scoped to this repository's contents and pull requests, makes CI run
+      # on its own. Without the App the job still pushes, opens and merges with GITHUB_TOKEN.
+      - name: Mint the sync App token
+        id: app
+        if: vars.SYNC_APP_ID != ''
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.SYNC_APP_ID }}
+          private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - uses: actions/checkout@v4
         with:
           ref: main
@@ -41,13 +61,10 @@ jobs:
       - name: Names in the rewrite exist in the published contract
         run: python3 -I .github/scripts/check_contract_names.py
 
-      # The organization does not let GITHUB_TOKEN open pull requests, so the pull request calls
-      # use the SYNC_PR_TOKEN secret (pull requests write on this repository) when it is set. The
-      # branch push always uses GITHUB_TOKEN.
-      - name: Open, update or close the pull request
+      - name: Open, update, merge or close the pull request
         env:
-          GH_TOKEN: ${{ secrets.SYNC_PR_TOKEN || github.token }}
-          PUSH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app.outputs.token || github.token }}
+          PUSH_TOKEN: ${{ steps.app.outputs.token || github.token }}
         run: |
           set -euo pipefail
           number="$(gh pr list --repo "$GITHUB_REPOSITORY" --base main --head "$SYNC_BRANCH" \
@@ -70,15 +87,27 @@ jobs:
             push --force origin "HEAD:refs/heads/$SYNC_BRANCH"
 
           title="Sync TOOLS.md with the public MCP tools and OpenAPI"
-          body="Automated rewrite of \`skills/edel-markets/TOOLS.md\` from https://docs.edel.finance/developers/mcp/tools and the live TestNet \`GET /openapi.json\`. Check that [CAPABILITIES.md](../blob/main/skills/edel-markets/CAPABILITIES.md) has a row for every new tool before merging. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          body="Automated rewrite of \`skills/edel-markets/TOOLS.md\` from https://docs.edel.finance/developers/mcp/tools and the live TestNet \`GET /openapi.json\`. The sync merges it once the contract-names check passes and [CAPABILITIES.md](../blob/main/skills/edel-markets/CAPABILITIES.md) has a row for every tool. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          head="$(git rev-parse HEAD)"
           if [ -n "$number" ]; then
             gh pr edit "$number" --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
             echo "Updated pull request #$number." >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          if ! gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$SYNC_BRANCH" \
+          elif ! gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$SYNC_BRANCH" \
             --title "$title" --body "$body"; then
-            echo "::error title=Pull request not opened::The sync pushed $SYNC_BRANCH but could not open the pull request. Store a token with pull requests write on this repository as the Actions secret SYNC_PR_TOKEN, or allow GitHub Actions to create pull requests in the organization and repository settings. Until then, open it from that branch by hand."
+            echo "::error title=Pull request not opened::The sync pushed $SYNC_BRANCH but could not open the pull request. Set up the sync GitHub App (variable SYNC_APP_ID, secret SYNC_APP_PRIVATE_KEY), or allow GitHub Actions to create pull requests in the organization and repository settings. Until then, open it from that branch by hand."
             exit 1
           fi
-          echo "Opened a pull request from $SYNC_BRANCH." >> "$GITHUB_STEP_SUMMARY"
+
+          # The contract-names step above is the check CI runs, and it passed on this rewrite. A tool
+          # without a CAPABILITIES.md row leaves the pull request open for a person to add it.
+          # --match-head-commit refuses the merge if the branch moved.
+          uncovered="$(comm -23 \
+            <(grep -oE '\bedel_[a-z][a-z0-9_]*' skills/edel-markets/TOOLS.md | sort -u) \
+            <(grep -oE '\bedel_[a-z][a-z0-9_]*' skills/edel-markets/CAPABILITIES.md | sort -u))"
+          if [ -n "$uncovered" ]; then
+            echo "::error title=CAPABILITIES.md rows missing::Add a row for: $(echo $uncovered). The next sync merges the pull request."
+            exit 1
+          fi
+          gh pr merge "$SYNC_BRANCH" --repo "$GITHUB_REPOSITORY" --squash --delete-branch \
+            --match-head-commit "$head"
+          echo "Merged the sync pull request at $head." >> "$GITHUB_STEP_SUMMARY"
