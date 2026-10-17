@@ -123,18 +123,24 @@ offer it.
 | Capability | MCP tool | REST route | Scope | Docs |
 | --- | --- | --- | --- | --- |
 | Strategy catalogue | `edel_agent_strategies` | `GET /v1/agents/strategies` | none | [rest-reference](https://docs.edel.finance/developers/rest-reference) |
-| Historical money estimate per strategy | `edel_agent_money_estimates` | Not in the live contract yet. | none | same |
+| Historical money estimate per strategy | `edel_agent_money_estimates` | `GET /v1/agents/strategy-estimates` | none | same |
+| Net profit or required deposit for one strategy and market | `edel_agent_estimate_scenario` | `POST /v1/agents/strategy-estimate-scenarios` | none | same |
+| Models an agent can use, with their cost | `edel_agent_models` | `GET /v1/agents/models` | none | same |
+| What auto market selection uses | `edel_agent_market_selection` | `GET /v1/agents/market-selection` | none | same |
 | Draft Pine from plain English | `edel_agent_pine` | `POST /v1/accounts/{accountId}/agents/pine` | `agents` | same |
 | Backtest with a probability estimate | `edel_agent_backtest` | `POST /v1/accounts/{accountId}/agents/backtest` | `agents` | same |
 | Deploy a paper agent | `edel_agent_deploy` | `POST /v1/accounts/{accountId}/agents` | `agents` | same |
 | List agents | `edel_agents` | `GET /v1/accounts/{accountId}/agents` | `agents` | same |
-| Pause, resume, stop, delete | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/stop`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` | `agents` | same |
+| Pause, resume, start, stop, delete | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/stop`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` | `agents` | same |
 | Choose the model | `edel_agent_model` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/model` | `agents` | same |
 | Action log and paper PnL | `edel_agent_actions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/actions` | `agents` | same |
-| An agent account's wallet (owner live view) | `edel_agent_wallet` | Not in the live contract yet. | `agents` | same |
-| An agent account's positions (owner live view) | `edel_agent_positions` | Not in the live contract yet. | `agents` | same |
-| An agent account's orders (owner live view) | `edel_agent_orders` | Not in the live contract yet. | `agents` | same |
-| An agent account's fills (owner live view) | `edel_agent_fills` | Not in the live contract yet. | `agents` | same |
+| An agent account's wallet (owner live view) | `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` | `agents` | same |
+| An agent account's positions (owner live view) | `edel_agent_positions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/positions` | `agents` | same |
+| An agent account's orders (owner live view) | `edel_agent_orders` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/orders` | `agents` | same |
+| An agent account's fills (owner live view) | `edel_agent_fills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fills` | `agents` | same |
+| An agent's protective skills | `edel_agent_skills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/skills` | `agents` | same |
+| An agent's model fees | `edel_agent_fees` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fees` | `agents` | same |
+| Fund your own agent account with test collateral | `edel_agent_fund` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/test-funding` | `funding` | same |
 
 "Not in the live contract yet" means the route is not in the live `/openapi.json` of any
 published venue today. Treat it as unavailable. This file names the route when the venue serves it.
