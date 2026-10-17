@@ -1,0 +1,84 @@
+name: sync-public-tools
+
+# Every hour, rewrites skills/edel-markets/TOOLS.md from the public MCP tools docs page and the live
+# TestNet OpenAPI document (.github/scripts/sync_public_tools.py), the same public sources the
+# contract-names check reads. When the file changes it rebuilds the fixed branch below from main
+# and opens or updates one pull request; it never pushes to main. A run with no change posts
+# nothing. It runs 30 minutes after the edel-docs sync so a merged docs change is already live.
+on:
+  schedule:
+    - cron: "53 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: sync-public-tools
+  cancel-in-progress: false
+
+env:
+  SYNC_BRANCH: automation/sync-public-tools
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rewrite TOOLS.md from the public sources
+        run: python3 -I .github/scripts/sync_public_tools.py
+
+      - name: Names in the rewrite exist in the published contract
+        run: python3 -I .github/scripts/check_contract_names.py
+
+      # The organization does not let GITHUB_TOKEN open pull requests, so the pull request calls
+      # use the SYNC_PR_TOKEN secret (pull requests write on this repository) when it is set. The
+      # branch push always uses GITHUB_TOKEN.
+      - name: Open, update or close the pull request
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PR_TOKEN || github.token }}
+          PUSH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          number="$(gh pr list --repo "$GITHUB_REPOSITORY" --base main --head "$SYNC_BRANCH" \
+            --state open --json number --jq '.[0].number // empty')"
+          if [ -z "$(git status --porcelain -- skills/edel-markets/TOOLS.md)" ]; then
+            echo "TOOLS.md already matches the public sources." >> "$GITHUB_STEP_SUMMARY"
+            [ -z "$number" ] || gh pr close "$number" --repo "$GITHUB_REPOSITORY" --delete-branch \
+              --comment "TOOLS.md matches the public sources again, so this sync is no longer needed."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --create "$SYNC_BRANCH"
+          git add -- skills/edel-markets/TOOLS.md
+          git commit --quiet --message "docs(skills): sync TOOLS.md with the public MCP tools and OpenAPI"
+          auth="$(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 --wrap=0)"
+          echo "::add-mask::$auth"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" \
+            push --force origin "HEAD:refs/heads/$SYNC_BRANCH"
+
+          title="Sync TOOLS.md with the public MCP tools and OpenAPI"
+          body="Automated rewrite of \`skills/edel-markets/TOOLS.md\` from https://docs.edel.finance/developers/mcp/tools and the live TestNet \`GET /openapi.json\`. Check that [CAPABILITIES.md](../blob/main/skills/edel-markets/CAPABILITIES.md) has a row for every new tool before merging. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
+            echo "Updated pull request #$number." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if ! gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$SYNC_BRANCH" \
+            --title "$title" --body "$body"; then
+            echo "::error title=Pull request not opened::The sync pushed $SYNC_BRANCH but could not open the pull request. Store a token with pull requests write on this repository as the Actions secret SYNC_PR_TOKEN, or allow GitHub Actions to create pull requests in the organization and repository settings. Until then, open it from that branch by hand."
+            exit 1
+          fi
+          echo "Opened a pull request from $SYNC_BRANCH." >> "$GITHUB_STEP_SUMMARY"

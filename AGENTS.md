@@ -8,11 +8,16 @@ API. Nothing else.
 - Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
   references, the Claude Code plugin manifests in `.claude-plugin/`, the generic client config in
   `mcp/`, the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and the offline `check.sh`
-  that tests them), and the `contract-names` CI check in `.github/`. Install paths are
+  that tests them), the `contract-names` CI check in `.github/`, and the hourly `sync-public-tools`
+  workflow that regenerates `skills/edel-markets/TOOLS.md` from the same public sources. Install paths are
   `npx skills add Edel-Finance/edel-ai-config` and `claude plugin install edel@edel-ai-config`.
 - The docs are the source of truth. A skill points at the docs page or the live contract and
   quotes it. It never states a limit, scope, field or status from memory.
 - The `contract-names` check reads only public sources and needs no secret. Never add a token.
+- `sync-public-tools` reads the same public sources. Its only optional secret is `SYNC_PR_TOKEN`
+  (pull requests write on this repository), because the organization does not let `GITHUB_TOKEN`
+  open pull requests. It pushes only `automation/sync-public-tools`, never `main`. Never edit
+  `TOOLS.md` by hand.
 - No application code, SDK, MCP server, package manifest, lockfile or dependency. The helpers use
   only `bash`, `curl` and the OS credential tool.
 - MCP configs point only at the public MCP URL of each environment, as published in the public
