@@ -18,14 +18,14 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agent_backtest` | `POST /v1/accounts/{accountId}/agents/backtest` |
 | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/stop`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` |
 | `edel_agent_deploy` | `POST /v1/accounts/{accountId}/agents` |
-| `edel_agent_fills` | Not in the live TestNet contract yet. |
+| `edel_agent_fills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fills` |
 | `edel_agent_model` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/model` |
-| `edel_agent_money_estimates` | Not in the live TestNet contract yet. |
-| `edel_agent_orders` | Not in the live TestNet contract yet. |
+| `edel_agent_money_estimates` | `GET /v1/agents/strategy-estimates` |
+| `edel_agent_orders` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/orders` |
 | `edel_agent_pine` | `POST /v1/accounts/{accountId}/agents/pine` |
-| `edel_agent_positions` | Not in the live TestNet contract yet. |
+| `edel_agent_positions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/positions` |
 | `edel_agent_strategies` | `GET /v1/agents/strategies` |
-| `edel_agent_wallet` | Not in the live TestNet contract yet. |
+| `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` |
 | `edel_agents` | `GET /v1/accounts/{accountId}/agents` |
 | `edel_cancel_all_orders` | `POST /v2/orders/cancel-all` |
 | `edel_cancel_order` | `POST /v1/orders/{orderId}/cancel` |
