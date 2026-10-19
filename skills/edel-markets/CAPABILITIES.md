@@ -133,6 +133,9 @@ offer it.
 | List agents | `edel_agents` | `GET /v1/accounts/{accountId}/agents` | `agents` | same |
 | Pause, resume, start, stop, delete | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/stop`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` | `agents` | same |
 | Choose the model | `edel_agent_model` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/model` | `agents` | same |
+| Rename an agent | `edel_agent_rename` | Not in the live contract yet. | `agents` | same |
+| Send a message to an agent | `edel_agent_chat` | Not in the live contract yet. | `agents` | same |
+| Read an agent's chat messages | `edel_agent_chat_messages` | Not in the live contract yet. | `agents` | same |
 | Action log and paper PnL | `edel_agent_actions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/actions` | `agents` | same |
 | An agent account's wallet (owner live view) | `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` | `agents` | same |
 | An agent account's positions (owner live view) | `edel_agent_positions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/positions` | `agents` | same |
@@ -141,6 +144,9 @@ offer it.
 | An agent's protective skills | `edel_agent_skills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/skills` | `agents` | same |
 | An agent's model fees | `edel_agent_fees` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fees` | `agents` | same |
 | Fund your own agent account with test collateral | `edel_agent_fund` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/test-funding` | `funding` | same |
+| Prepare funding of your own agent account | `edel_agent_fund_prepare` | Not in the live contract yet. | `funding` | same |
+| Confirm a prepared agent funding | `edel_agent_fund_confirm` | Not in the live contract yet. | `funding` | same |
+| Return funds from an agent account to your account | `edel_agent_withdraw` | Not in the live contract yet. | `funding` | same |
 
 "Not in the live contract yet" means the route is not in the live `/openapi.json` of any
 published venue today. Treat it as unavailable. This file names the route when the venue serves it.
