@@ -16,12 +16,16 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_affiliate_availability` | `GET /v1/affiliate/availability` |
 | `edel_agent_actions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/actions` |
 | `edel_agent_backtest` | `POST /v1/accounts/{accountId}/agents/backtest` |
+| `edel_agent_chat` | Not in the live TestNet contract yet. |
+| `edel_agent_chat_messages` | Not in the live TestNet contract yet. |
 | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/stop`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` |
 | `edel_agent_deploy` | `POST /v1/accounts/{accountId}/agents` |
 | `edel_agent_estimate_scenario` | `POST /v1/agents/strategy-estimate-scenarios` |
 | `edel_agent_fees` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fees` |
 | `edel_agent_fills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fills` |
 | `edel_agent_fund` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/test-funding` |
+| `edel_agent_fund_confirm` | Not in the live TestNet contract yet. |
+| `edel_agent_fund_prepare` | Not in the live TestNet contract yet. |
 | `edel_agent_market_selection` | `GET /v1/agents/market-selection` |
 | `edel_agent_model` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/model` |
 | `edel_agent_models` | `GET /v1/agents/models` |
@@ -29,9 +33,11 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agent_orders` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/orders` |
 | `edel_agent_pine` | `POST /v1/accounts/{accountId}/agents/pine` |
 | `edel_agent_positions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/positions` |
+| `edel_agent_rename` | Not in the live TestNet contract yet. |
 | `edel_agent_skills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/skills` |
 | `edel_agent_strategies` | `GET /v1/agents/strategies` |
 | `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` |
+| `edel_agent_withdraw` | Not in the live TestNet contract yet. |
 | `edel_agents` | `GET /v1/accounts/{accountId}/agents` |
 | `edel_cancel_all_orders` | `POST /v2/orders/cancel-all` |
 | `edel_cancel_order` | `POST /v1/orders/{orderId}/cancel` |
