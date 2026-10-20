@@ -18,10 +18,13 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agent_backtest` | `POST /v1/accounts/{accountId}/agents/backtest` |
 | `edel_agent_chat` | Not in the live TestNet contract yet. |
 | `edel_agent_chat_messages` | Not in the live TestNet contract yet. |
+| `edel_agent_chat_presets` | Not in the live TestNet contract yet. |
+| `edel_agent_close` | Not in the live TestNet contract yet. |
 | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/stop`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` |
 | `edel_agent_deploy` | `POST /v1/accounts/{accountId}/agents` |
 | `edel_agent_estimate_scenario` | `POST /v1/agents/strategy-estimate-scenarios` |
 | `edel_agent_fees` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fees` |
+| `edel_agent_fill_decision` | Not in the live TestNet contract yet. |
 | `edel_agent_fills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fills` |
 | `edel_agent_fund` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/test-funding` |
 | `edel_agent_fund_confirm` | Not in the live TestNet contract yet. |
@@ -36,6 +39,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agent_rename` | Not in the live TestNet contract yet. |
 | `edel_agent_skills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/skills` |
 | `edel_agent_strategies` | `GET /v1/agents/strategies` |
+| `edel_agent_strategy` | Not in the live TestNet contract yet. |
 | `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` |
 | `edel_agent_withdraw` | Not in the live TestNet contract yet. |
 | `edel_agents` | `GET /v1/accounts/{accountId}/agents` |
@@ -68,6 +72,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_preview_order` | `POST /v1/orders/preview` |
 | `edel_price` | `GET /v1/markets/{marketId}/stats`, `GET /v1/markets/{marketId}/book` |
 | `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` |
+| `edel_terms` | Not in the live TestNet contract yet. |
 | `edel_trade_history` | `GET /v1/accounts/{accountId}/fills` |
 | `edel_transfers` | `GET /v1/accounts/{accountId}/transfers` |
 | `edel_withdraw` | `GET /v1/accounts/{accountId}/party`, `POST /v1/withdrawals` |
