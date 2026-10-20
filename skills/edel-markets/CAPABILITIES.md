@@ -33,6 +33,8 @@ tools. The server fills `accountId` from the key.
 | Read the current key metadata | `edel_connect` | `GET /v1/api-keys/current` | `read` | [api-keys](https://docs.edel.finance/developers/authentication/api-keys) |
 | Account readiness and Party status | `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` | `read` | [for-agents](https://docs.edel.finance/developers/accounts/for-agents) |
 | Account snapshot | `edel_account` | `GET /v1/accounts/{accountId}` | `read` | [rest-reference](https://docs.edel.finance/developers/rest-reference) |
+| Venue state and availability of each action | `edel_system_status` | Not in the live TestNet contract yet. | none | [mcp/tools](https://docs.edel.finance/developers/mcp/tools) |
+| Read the account's acceptance of the current trading terms | `edel_terms` | Not in the live TestNet contract yet. | `read` | [mcp/tools](https://docs.edel.finance/developers/mcp/tools) |
 | KYC state | `edel_kyc_status` | `GET /v1/accounts/{accountId}/kyc` | `read` | [kyc-policy](https://docs.edel.finance/developers/accounts/kyc-policy) |
 | The owner's own profile (email, sign-in providers, passkeys, KYC, Party, key metadata) | `edel_me` | `GET /v1/me` | `read` | [rest-reference](https://docs.edel.finance/developers/rest-reference) |
 | The owner's passkeys and their status in this venue | `edel_passkeys` | `GET /v1/accounts/{accountId}/passkeys` | `read` | [for-humans](https://docs.edel.finance/developers/accounts/for-humans) |
@@ -44,6 +46,8 @@ tools. The server fills `accountId` from the key.
 | Market catalogue | `edel_markets` | `GET /v1/markets` | none | [rest-reference](https://docs.edel.finance/developers/rest-reference) |
 | One market | `edel_market` | `GET /v1/markets/{marketId}` | none | same |
 | Stats and book snapshot | `edel_price` | `GET /v1/markets/{marketId}/stats`, `GET /v1/markets/{marketId}/book` | none | same |
+| Ticker snapshots for all or selected markets (CCXT shape) | `edel_market_tickers` | Not in the live TestNet contract yet. | none | [mcp/tools](https://docs.edel.finance/developers/mcp/tools) |
+| Venue open interest, 24h volume and mean funding rates per settlement asset | `edel_venue_totals` | Not in the live TestNet contract yet. | none | [mcp/tools](https://docs.edel.finance/developers/mcp/tools) |
 | Candles | `edel_candles` | `GET /v1/markets/{marketId}/candles` | none | same |
 | Candidate markets | `edel_candidate_markets` | `GET /v1/market-data/candidate-markets` | none | same |
 | Leaderboard | `edel_leaderboard` | `GET /v1/leaderboard` | none | same |
@@ -135,7 +139,11 @@ offer it.
 | Choose the model | `edel_agent_model` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/model` | `agents` | same |
 | Rename an agent | `edel_agent_rename` | Not in the live contract yet. | `agents` | same |
 | Send a message to an agent | `edel_agent_chat` | Not in the live contract yet. | `agents` | same |
+| List preset questions for agent chat | `edel_agent_chat_presets` | Not in the live TestNet contract yet. | none | [mcp/tools](https://docs.edel.finance/developers/mcp/tools) |
 | Read an agent's chat messages | `edel_agent_chat_messages` | Not in the live contract yet. | `agents` | same |
+| Close all positions of an owned, paused or stopped live agent with reduce-only market orders, with owner approval | `edel_agent_close` | Not in the live TestNet contract yet. | `agents` | [mcp/tools](https://docs.edel.finance/developers/mcp/tools) |
+| Read the recorded decision behind an owned live agent's fill | `edel_agent_fill_decision` | Not in the live TestNet contract yet. | `agents` | [mcp/tools](https://docs.edel.finance/developers/mcp/tools) |
+| Read an owned agent's deployed Pine v5 code and strategy version | `edel_agent_strategy` | Not in the live TestNet contract yet. | `agents` | [mcp/tools](https://docs.edel.finance/developers/mcp/tools) |
 | Action log and paper PnL | `edel_agent_actions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/actions` | `agents` | same |
 | An agent account's wallet (owner live view) | `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` | `agents` | same |
 | An agent account's positions (owner live view) | `edel_agent_positions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/positions` | `agents` | same |
