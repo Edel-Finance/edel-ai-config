@@ -20,7 +20,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agent_chat_messages` | Not in the live TestNet contract yet. |
 | `edel_agent_chat_presets` | Not in the live TestNet contract yet. |
 | `edel_agent_close` | Not in the live TestNet contract yet. |
-| `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/stop`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` |
+| `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` |
 | `edel_agent_deploy` | `POST /v1/accounts/{accountId}/agents` |
 | `edel_agent_estimate_scenario` | `POST /v1/agents/strategy-estimate-scenarios` |
 | `edel_agent_fees` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fees` |
@@ -58,6 +58,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_kyc_status` | `GET /v1/accounts/{accountId}/kyc` |
 | `edel_leaderboard` | `GET /v1/leaderboard` |
 | `edel_market` | `GET /v1/markets/{marketId}` |
+| `edel_market_tickers` | Not in the live TestNet contract yet. |
 | `edel_market_trades` | `GET /v2/markets/{symbol}/trades` |
 | `edel_markets` | `GET /v1/markets` |
 | `edel_me` | `GET /v1/me` |
@@ -75,6 +76,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_terms` | Not in the live TestNet contract yet. |
 | `edel_trade_history` | `GET /v1/accounts/{accountId}/fills` |
 | `edel_transfers` | `GET /v1/accounts/{accountId}/transfers` |
+| `edel_venue_totals` | Not in the live TestNet contract yet. |
 | `edel_withdraw` | `GET /v1/accounts/{accountId}/party`, `POST /v1/withdrawals` |
 | `edel_withdrawal` | `GET /v1/withdrawals/{withdrawalId}` |
 | `edel_withdrawal_confirm` | `POST /v1/withdrawals/{withdrawalId}/confirm` |
