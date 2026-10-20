@@ -73,6 +73,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_preview_order` | `POST /v1/orders/preview` |
 | `edel_price` | `GET /v1/markets/{marketId}/stats`, `GET /v1/markets/{marketId}/book` |
 | `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` |
+| `edel_system_status` | Not in the live TestNet contract yet. |
 | `edel_terms` | Not in the live TestNet contract yet. |
 | `edel_trade_history` | `GET /v1/accounts/{accountId}/fills` |
 | `edel_transfers` | `GET /v1/accounts/{accountId}/transfers` |
