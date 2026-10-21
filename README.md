@@ -113,18 +113,24 @@ Approve a key in your browser and store it in the macOS login Keychain with `scr
 1. Install the portable Agent Plugins v1 package:
 
    ```sh
-   hermes plugins install Edel-Finance/edel-ai-config
-   hermes plugins enable edel
+   hermes plugins install Edel-Finance/edel-ai-config --enable
    ```
 
-2. Export `EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) from your secret store before
-   starting Hermes.
+2. Add the TestNet MCP server. Hermes prompts for your key and saves it to its private secret
+   store; the key never appears on the command line:
 
-3. Verify the installed plugin:
+   ```sh
+   hermes mcp add edel-testnet --url https://mcp-testnet.edel-api.xyz/mcp --auth header
+   ```
+
+   Use `edel-development` and `https://mcp-dev.edel-api.xyz/mcp` instead for Development.
+
+3. Verify the installed skill and MCP server:
 
    ```sh
    hermes plugins list --no-bundled
    hermes plugins show edel
+   hermes mcp list
    ```
 
 ### OpenClaw
@@ -132,21 +138,11 @@ Approve a key in your browser and store it in the macOS login Keychain with `scr
 Install the OpenClaw skill from `.openclaw/skills/edel-markets/SKILL.md`:
 
 ```sh
-clawhub install edel-markets
+openclaw skills install git:Edel-Finance/edel-ai-config
 ```
 
 Or copy `.openclaw/skills/edel-markets` into `~/.openclaw/skills/edel-markets`, then add the
 MCP entries from [mcp/servers.json](mcp/servers.json) to your OpenClaw MCP configuration.
-
-### ChatGPT
-
-ChatGPT connects to remote Streamable HTTP MCP servers through a custom connector or app. Set the
-MCP server URL to `https://mcp-testnet.edel-api.xyz/mcp` (TestNet) or
-`https://mcp-dev.edel-api.xyz/mcp` (Development). The Edel MCP server has no OAuth flow today
-(`/.well-known/oauth-protected-resource` answers `404`) and requires
-`Authorization: Bearer <apiKey>` on every request. Where your ChatGPT plan or connector form does
-not let you attach a custom `Authorization` bearer header, use Codex, Claude Code, Antigravity,
-Grok, Hermes or another MCP client that sends your key from your secret store.
 
 ### Install the skill only (any Agent Skills client)
 

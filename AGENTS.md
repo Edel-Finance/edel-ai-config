@@ -9,7 +9,7 @@ API. Nothing else.
   references, the plugin and skill manifests for Claude Code (`.claude-plugin/`), Codex
   (`.codex-plugin/`, `.agents/plugins/`, `skills/.codex-plugin/`), Grok (`.grok-plugin/`,
   `skills/plugin.json`, `skills/.mcp.json`), Antigravity (`plugin.json`, `mcp_config.json`),
-  Hermes (`plugin.json`, `mcp.json`), OpenClaw (`.openclaw/skills/`), the shared `.mcp.json` and
+  Hermes (`plugin.json`), OpenClaw (`.openclaw/skills/`), the shared `.mcp.json` and
   generic client config in `mcp/`, the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and
   the offline `check.sh` that tests them), the `contract-names` CI check in `.github/`, and the
   hourly `sync-public-tools` workflow that regenerates `skills/edel-markets/TOOLS.md` from the same

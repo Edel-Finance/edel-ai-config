@@ -75,7 +75,6 @@ smoke() {
   for file in \
     .claude-plugin/plugin.json \
     mcp/servers.json \
-    mcp.json \
     .mcp.json \
     mcp_config.json \
     skills/.mcp.json; do
