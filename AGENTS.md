@@ -6,11 +6,17 @@ API. Nothing else.
 ## Scope
 
 - Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
-  references, the Claude Code plugin manifests in `.claude-plugin/`, the generic client config in
-  `mcp/`, the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and the offline `check.sh`
-  that tests them), the `contract-names` CI check in `.github/`, and the hourly `sync-public-tools`
-  workflow that regenerates `skills/edel-markets/TOOLS.md` from the same public sources. Install paths are
-  `npx skills add Edel-Finance/edel-ai-config` and `claude plugin install edel@edel-ai-config`.
+  references, the plugin and skill manifests for Claude Code (`.claude-plugin/`), Codex
+  (`.codex-plugin/`, `.agents/plugins/`, `skills/.codex-plugin/`), Grok (`.grok-plugin/`,
+  `skills/plugin.json`, `skills/.mcp.json`), Antigravity (`plugin.json`, `mcp_config.json`),
+  Hermes (`plugin.json`, `mcp.json`), OpenClaw (`.openclaw/skills/`), the shared `.mcp.json` and
+  generic client config in `mcp/`, the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and
+  the offline `check.sh` that tests them), the `contract-names` CI check in `.github/`, and the
+  hourly `sync-public-tools` workflow that regenerates `skills/edel-markets/TOOLS.md` from the same
+  public sources. Install paths include `npx skills add Edel-Finance/edel-ai-config`,
+  `claude plugin install edel@edel-ai-config`, `codex plugin add edel@edel-ai-config`,
+  `agy plugin install`, `grok plugin install Edel-Finance/edel-ai-config --trust`, and
+  `hermes plugins install Edel-Finance/edel-ai-config`.
 - The docs are the source of truth. A skill points at the docs page or the live contract and
   quotes it. It never states a limit, scope, field or status from memory.
 - The `contract-names` check reads only public sources and needs no secret. Never add a token.

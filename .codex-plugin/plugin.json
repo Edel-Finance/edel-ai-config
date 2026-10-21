@@ -1,0 +1,36 @@
+{
+  "name": "edel",
+  "version": "1.1.0",
+  "description": "Public skills and MCP client configuration for the Edel PERPS API.",
+  "author": {
+    "name": "Edel Finance",
+    "url": "https://edel.finance"
+  },
+  "homepage": "https://docs.edel.finance/developers/mcp/connect",
+  "repository": "https://github.com/Edel-Finance/edel-ai-config",
+  "license": "MIT",
+  "keywords": [
+    "edel",
+    "perps",
+    "trading",
+    "canton",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Edel Finance",
+    "shortDescription": "Public skills and MCP client configuration for the Edel PERPS API.",
+    "longDescription": "Install the Edel PERPS public skill and MCP server configuration for market snapshots, account readiness checks, previews and owner-approved orders.",
+    "developerName": "Edel Finance",
+    "category": "Finance",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://docs.edel.finance/developers/mcp/connect",
+    "defaultPrompt": [
+      "Check Edel PERPS market prices and my account readiness."
+    ]
+  }
+}

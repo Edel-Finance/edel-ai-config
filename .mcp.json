@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "edel-development": {
+      "type": "http",
+      "url": "https://mcp-dev.edel-api.xyz/mcp",
+      "bearer_token_env_var": "EDEL_MCP_KEY_DEVELOPMENT",
+      "headers": {
+        "Authorization": "Bearer ${EDEL_MCP_KEY_DEVELOPMENT}"
+      }
+    },
+    "edel-testnet": {
+      "type": "http",
+      "url": "https://mcp-testnet.edel-api.xyz/mcp",
+      "bearer_token_env_var": "EDEL_MCP_KEY_TESTNET",
+      "headers": {
+        "Authorization": "Bearer ${EDEL_MCP_KEY_TESTNET}"
+      }
+    },
+    "edel-production": {
+      "type": "http",
+      "url": "",
+      "enabled": false,
+      "disabled": true
+    }
+  }
+}

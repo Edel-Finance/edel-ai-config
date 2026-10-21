@@ -72,7 +72,13 @@ smoke() {
   fi
   echo "origin: $origin/mcp"
   local file
-  for file in .claude-plugin/plugin.json mcp/servers.json; do
+  for file in \
+    .claude-plugin/plugin.json \
+    mcp/servers.json \
+    mcp.json \
+    .mcp.json \
+    mcp_config.json \
+    skills/.mcp.json; do
     if ! grep -q "\"$origin/mcp\"" "$root/$file"; then
       echo "config drift: $file does not name $origin/mcp"
       failures=$((failures + 1))
