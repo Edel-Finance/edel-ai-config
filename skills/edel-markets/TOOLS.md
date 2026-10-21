@@ -16,19 +16,19 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_affiliate_availability` | `GET /v1/affiliate/availability` |
 | `edel_agent_actions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/actions` |
 | `edel_agent_backtest` | `POST /v1/accounts/{accountId}/agents/backtest` |
-| `edel_agent_chat` | Not in the live TestNet contract yet. |
-| `edel_agent_chat_messages` | Not in the live TestNet contract yet. |
-| `edel_agent_chat_presets` | Not in the live TestNet contract yet. |
-| `edel_agent_close` | Not in the live TestNet contract yet. |
+| `edel_agent_chat` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/chat` |
+| `edel_agent_chat_messages` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/chat` |
+| `edel_agent_chat_presets` | `GET /v1/agents/chat-presets` |
+| `edel_agent_close` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/close-position` |
 | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` |
 | `edel_agent_deploy` | `POST /v1/accounts/{accountId}/agents` |
 | `edel_agent_estimate_scenario` | `POST /v1/agents/strategy-estimate-scenarios` |
 | `edel_agent_fees` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fees` |
-| `edel_agent_fill_decision` | Not in the live TestNet contract yet. |
+| `edel_agent_fill_decision` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fills/{tradeId}/decision` |
 | `edel_agent_fills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fills` |
 | `edel_agent_fund` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/test-funding` |
-| `edel_agent_fund_confirm` | Not in the live TestNet contract yet. |
-| `edel_agent_fund_prepare` | Not in the live TestNet contract yet. |
+| `edel_agent_fund_confirm` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/fundings/{transferId}/confirm` |
+| `edel_agent_fund_prepare` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/fundings` |
 | `edel_agent_market_selection` | `GET /v1/agents/market-selection` |
 | `edel_agent_model` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/model` |
 | `edel_agent_models` | `GET /v1/agents/models` |
@@ -36,12 +36,12 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agent_orders` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/orders` |
 | `edel_agent_pine` | `POST /v1/accounts/{accountId}/agents/pine` |
 | `edel_agent_positions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/positions` |
-| `edel_agent_rename` | Not in the live TestNet contract yet. |
+| `edel_agent_rename` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/name` |
 | `edel_agent_skills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/skills` |
 | `edel_agent_strategies` | `GET /v1/agents/strategies` |
-| `edel_agent_strategy` | Not in the live TestNet contract yet. |
+| `edel_agent_strategy` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/strategy` |
 | `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` |
-| `edel_agent_withdraw` | Not in the live TestNet contract yet. |
+| `edel_agent_withdraw` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/returns` |
 | `edel_agents` | `GET /v1/accounts/{accountId}/agents` |
 | `edel_cancel_all_orders` | `POST /v2/orders/cancel-all` |
 | `edel_cancel_order` | `POST /v1/orders/{orderId}/cancel` |
@@ -58,7 +58,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_kyc_status` | `GET /v1/accounts/{accountId}/kyc` |
 | `edel_leaderboard` | `GET /v1/leaderboard` |
 | `edel_market` | `GET /v1/markets/{marketId}` |
-| `edel_market_tickers` | Not in the live TestNet contract yet. |
+| `edel_market_tickers` | `GET /v2/tickers` |
 | `edel_market_trades` | `GET /v2/markets/{symbol}/trades` |
 | `edel_markets` | `GET /v1/markets` |
 | `edel_me` | `GET /v1/me` |
@@ -73,11 +73,11 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_preview_order` | `POST /v1/orders/preview` |
 | `edel_price` | `GET /v1/markets/{marketId}/stats`, `GET /v1/markets/{marketId}/book` |
 | `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` |
-| `edel_system_status` | Not in the live TestNet contract yet. |
-| `edel_terms` | Not in the live TestNet contract yet. |
+| `edel_system_status` | `GET /v1/system/status` |
+| `edel_terms` | `GET /v1/accounts/{accountId}/terms` |
 | `edel_trade_history` | `GET /v1/accounts/{accountId}/fills` |
 | `edel_transfers` | `GET /v1/accounts/{accountId}/transfers` |
-| `edel_venue_totals` | Not in the live TestNet contract yet. |
+| `edel_venue_totals` | `GET /v2/venue/totals` |
 | `edel_withdraw` | `GET /v1/accounts/{accountId}/party`, `POST /v1/withdrawals` |
 | `edel_withdrawal` | `GET /v1/withdrawals/{withdrawalId}` |
 | `edel_withdrawal_confirm` | `POST /v1/withdrawals/{withdrawalId}/confirm` |
