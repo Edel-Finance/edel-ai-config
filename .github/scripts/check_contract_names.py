@@ -16,7 +16,8 @@ OPENAPI_URL = os.environ.get("EDEL_OPENAPI_URL", "https://testnet.edel-api.xyz/o
 MCP_TOOLS_URL = os.environ.get(
     "EDEL_MCP_TOOLS_URL", "https://docs.edel.finance/developers/mcp/tools"
 )
-SKILLS_DIR = pathlib.Path(__file__).resolve().parents[2] / "skills"
+ROOT_DIR = pathlib.Path(__file__).resolve().parents[2]
+SKILLS_DIRS = (ROOT_DIR / "skills", ROOT_DIR / ".openclaw" / "skills")
 
 TOOL_RE = re.compile(r"`(edel_[a-z][a-z0-9_]*)`")
 ROUTE_RE = re.compile(r"`(GET|POST|PUT|PATCH|DELETE) (/[A-Za-z0-9_\-/{}:.]*)`")
@@ -48,9 +49,10 @@ def main():
         return 1
 
     missing = []
-    for doc in sorted(SKILLS_DIR.rglob("*.md")):
+    docs = [doc for skills_dir in SKILLS_DIRS if skills_dir.exists() for doc in sorted(skills_dir.rglob("*.md"))]
+    for doc in docs:
         text = doc.read_text(encoding="utf-8")
-        rel = doc.relative_to(SKILLS_DIR.parent)
+        rel = doc.relative_to(ROOT_DIR)
         for tool in sorted(set(TOOL_RE.findall(text))):
             if tool not in known_tools:
                 missing.append(f"{rel}: MCP tool {tool} is not on {MCP_TOOLS_URL}")

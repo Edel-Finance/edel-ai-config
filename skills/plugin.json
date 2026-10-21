@@ -1,0 +1,13 @@
+{
+  "name": "edel",
+  "version": "1.1.0",
+  "description": "Public skills and MCP client configuration for the Edel PERPS API.",
+  "author": {
+    "name": "Edel Finance"
+  },
+  "homepage": "https://docs.edel.finance/developers/mcp/connect",
+  "repository": "https://github.com/Edel-Finance/edel-ai-config",
+  "license": "MIT",
+  "skills": ".",
+  "mcpServers": "./.mcp.json"
+}

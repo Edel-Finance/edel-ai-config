@@ -3,27 +3,24 @@
 Agent skills and MCP configuration for the Edel PERPS public API. Install them into your coding
 agent, then let the agent read the Edel developer docs and trade only after you say so.
 
-## Install the skill only
+## Public MCP servers
 
-```sh
-npx skills add Edel-Finance/edel-ai-config
-```
+Every plugin package in this repository carries the `edel-markets` skill plus the public Edel MCP
+endpoints, authenticated with your own API key only. Never use another person's browser session.
 
-This adds one skill, `edel-markets`, to your agent. It covers every public Edel PERPS capability:
-REST, CCXT `/v2`, WebSockets, MCP tools, paper strategy agents, deposits and withdrawals. The skill
-reads `skills/edel-markets/AUTH.md` before any private call and finds each capability in
-`skills/edel-markets/CAPABILITIES.md`.
+| Server | Environment | URL | Environment variable |
+| --- | --- | --- | --- |
+| `edel-development` | Development | `https://mcp-dev.edel-api.xyz/mcp` | `EDEL_MCP_KEY_DEVELOPMENT` |
+| `edel-testnet` | TestNet | `https://mcp-testnet.edel-api.xyz/mcp` | `EDEL_MCP_KEY_TESTNET` |
+| `edel-production` | Production | Disabled placeholder (no public MCP yet) | none |
 
-## Install the Claude Code plugin
+Approve a key in your browser and store it in the macOS login Keychain with `scripts/connect.sh`
+(see [mcp/README.md](mcp/README.md)), then export `EDEL_MCP_KEY_TESTNET` or
+`EDEL_MCP_KEY_DEVELOPMENT` in your shell profile before starting your agent client.
 
-The `edel` plugin carries the same skill plus the public Edel MCP servers, one per environment.
-It authenticates with your own API key only. It never uses another person's browser session.
+## Install by harness
 
-| Server | Environment | URL |
-| --- | --- | --- |
-| `edel-development` | Development | `https://mcp-dev.edel-api.xyz/mcp` |
-| `edel-testnet` | TestNet | `https://mcp-testnet.edel-api.xyz/mcp` |
-| `edel-production` | Production | Disabled. No public MCP yet. Shows as `Not configured`. |
+### Claude Code
 
 1. Add the marketplace and install the plugin:
 
@@ -32,30 +29,133 @@ It authenticates with your own API key only. It never uses another person's brow
    claude plugin install edel@edel-ai-config
    ```
 
-2. Get your own key for each environment you use. Run the helper from a clone of this
-   repository. It prints a page and a code. You open
-   the page in your own browser, sign in with your passkey, check the code and approve. The
-   helper saves the key in the plugin option, which Claude Code keeps in the OS secure credential
+2. Approve your own key for each environment you use and store it in the OS secure credential
    store:
 
    ```sh
-   scripts/connect.sh development claude
    scripts/connect.sh testnet claude
+   scripts/connect.sh development claude
    ```
 
-   Or set the key yourself with `/plugin`, then Installed, `edel`, Configure options. Do not use
-   `--config KEY=VALUE`: it puts the key on the command line.
+   Or set the key with `/plugin`, then Installed, `edel`, Configure options. Do not pass a key on
+   the command line.
 
-3. Restart Claude Code. Run `claude mcp list`. Each environment with a key shows as connected.
-   An environment without a key shows a `401` with `apiKeyRejection: malformed`.
+3. Restart Claude Code and run `claude mcp list` and `claude plugin list` to verify the servers
+   and skill.
 
-4. In a session, call `edel_connect` to confirm the key, then `edel_status`. Trading needs the
-   AUTH.md order and your explicit permission for each order.
+### Codex
 
-A key expires (24 hours by default, 7 days at most). Run step 2 again when the server answers
-`401` with `nextTool: edel_connect`.
+1. Add the marketplace and install the plugin:
 
-## Other MCP clients
+   ```sh
+   codex plugin marketplace add Edel-Finance/edel-ai-config
+   codex plugin add edel@edel-ai-config
+   ```
+
+2. Export `EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) from your secret store before
+   starting Codex.
+
+3. Verify the installed plugin and MCP servers:
+
+   ```sh
+   codex plugin list
+   codex mcp list
+   ```
+
+### Antigravity
+
+1. Install the plugin from a clone of this repository (or point `agy plugin install` at the
+   directory):
+
+   ```sh
+   agy plugin install .
+   ```
+
+2. Export `EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) from your secret store before
+   starting Antigravity.
+
+3. Verify the installed plugin, skill and MCP servers:
+
+   ```sh
+   agy plugin list
+   ```
+
+### Grok
+
+1. Install and enable the plugin:
+
+   ```sh
+   grok plugin install Edel-Finance/edel-ai-config --trust
+   grok plugin enable edel
+   ```
+
+   Or install through the Grok marketplace commands:
+
+   ```sh
+   grok plugin marketplace add Edel-Finance/edel-ai-config
+   grok plugin install edel --trust
+   grok plugin enable edel
+   ```
+
+2. Export `EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) from your secret store before
+   starting Grok.
+
+3. Verify the installed plugin and MCP servers:
+
+   ```sh
+   grok plugin list
+   grok plugin details edel
+   grok mcp doctor
+   ```
+
+### Hermes
+
+1. Install the portable Agent Plugins v1 package:
+
+   ```sh
+   hermes plugins install Edel-Finance/edel-ai-config --enable
+   ```
+
+2. Add the TestNet MCP server. Hermes prompts for your key and saves it to its private secret
+   store; the key never appears on the command line:
+
+   ```sh
+   hermes mcp add edel-testnet --url https://mcp-testnet.edel-api.xyz/mcp --auth header
+   ```
+
+   Use `edel-development` and `https://mcp-dev.edel-api.xyz/mcp` instead for Development.
+
+3. Verify the installed skill and MCP server:
+
+   ```sh
+   hermes plugins list --no-bundled
+   hermes plugins show edel
+   hermes mcp list
+   ```
+
+### OpenClaw
+
+Install the OpenClaw skill from `.openclaw/skills/edel-markets/SKILL.md`:
+
+```sh
+openclaw skills install git:Edel-Finance/edel-ai-config
+```
+
+Or copy `.openclaw/skills/edel-markets` into `~/.openclaw/skills/edel-markets`, then add the
+MCP entries from [mcp/servers.json](mcp/servers.json) to your OpenClaw MCP configuration.
+
+### Install the skill only (any Agent Skills client)
+
+```sh
+npx skills add Edel-Finance/edel-ai-config --skill edel-markets
+```
+
+This adds one skill, `edel-markets`, to your agent. It covers every public Edel PERPS capability:
+REST, CCXT `/v2`, WebSockets, MCP tools, paper strategy agents, deposits and withdrawals. The skill
+reads `skills/edel-markets/AUTH.md` before any private call and finds each capability in
+`skills/edel-markets/CAPABILITIES.md`.
+
+## Generic MCP config and smoke test
 
 [mcp/README.md](mcp/README.md) has a generic config, `mcp/servers.json`, that reads the key from
 an environment variable or the macOS Keychain. It also has the smoke test:
@@ -71,7 +171,7 @@ scripts/smoke.sh development testnet
 Do these steps in order. Steps 2 and 4 need a human with a browser and a passkey. An agent cannot
 complete them alone.
 
-1. Install the skill with the command above.
+1. Install the skill or plugin with the commands above.
 2. Read [skills/edel-markets/AUTH.md](skills/edel-markets/AUTH.md). Create or reuse your signing
    identity (passkey plus delegated signing key), then log in. Login returns a bearer token. The
    agent keeps it in memory and never prints it.
@@ -81,6 +181,9 @@ complete them alone.
    reused. If not, you approve each passkey prompt yourself to complete secure setup.
 5. Give the agent explicit permission for each order. The skill refuses to place, cancel, deposit
    or withdraw without it.
+
+A key expires (24 hours by default, 7 days at most). Approve a fresh key when the server answers
+`401` with `nextTool: edel_connect`.
 
 ## Where the facts live
 

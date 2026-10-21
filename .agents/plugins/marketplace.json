@@ -1,0 +1,20 @@
+{
+  "name": "edel-ai-config",
+  "interface": {
+    "displayName": "Edel Finance"
+  },
+  "plugins": [
+    {
+      "name": "edel",
+      "source": {
+        "source": "local",
+        "path": "./skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Finance"
+    }
+  ]
+}

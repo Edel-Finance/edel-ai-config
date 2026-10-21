@@ -1,0 +1,16 @@
+{
+  "name": "edel-ai-config",
+  "description": "Public skills and MCP client configuration for the Edel PERPS API.",
+  "owner": {
+    "name": "Edel Finance"
+  },
+  "plugins": [
+    {
+      "name": "edel",
+      "description": "Public Edel PERPS skill and MCP connection.",
+      "version": "1.1.0",
+      "source": "./skills",
+      "category": "development"
+    }
+  ]
+}
