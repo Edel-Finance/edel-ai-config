@@ -18,6 +18,28 @@ Approve a key in your browser and store it in the macOS login Keychain with `scr
 (see [mcp/README.md](mcp/README.md)), then export `EDEL_MCP_KEY_TESTNET` or
 `EDEL_MCP_KEY_DEVELOPMENT` in your shell profile before starting your agent client.
 
+## Platform status
+
+Each package was installed into a throwaway home or config folder, never the global config. Every
+MCP package reaches the public MCP and gets the documented `401` with `nextTool: edel_connect`
+until you approve your own key. A public read (`GET /v1/markets` on Development) returned 15
+markets. Status: tested means installed and run with the real CLI; structure-checked means checked
+against the platform's published format because its CLI is not on the test machine.
+
+| Platform | Install | What it can do | MCP tool call | Status | Format doc |
+| --- | --- | --- | --- | --- | --- |
+| Claude Code | `claude plugin install edel@edel-ai-config` | Skill plus Development and TestNet MCP | Reaches server, needs `edel_connect` key | tested | <https://code.claude.com/docs/en/plugins-reference> |
+| Codex | `codex plugin add edel@edel-ai-config` | Skill plus Development and TestNet MCP | Reaches server, needs `edel_connect` key | tested | <https://developers.openai.com/codex/plugins> |
+| Grok | `grok plugin install Edel-Finance/edel-ai-config --trust` | Skill plus Development and TestNet MCP | Reaches server, needs `edel_connect` key | tested | `grok plugin --help` |
+| Antigravity | `agy plugin install .` | Skill plus Development and TestNet MCP | Reaches server, needs `edel_connect` key | tested | `agy plugin validate --help` |
+| Hermes | `hermes plugins install Edel-Finance/edel-ai-config --enable` | Skill; MCP added with `hermes mcp add` | Reaches server, needs `edel_connect` key | tested | <https://agent-plugins.org> |
+| Cursor | `cursor-agent --plugin-dir <clone>`, or a team marketplace | Skill plus Development and TestNet MCP | Same URL and header, not run | structure-checked | <https://cursor.com/docs/plugins/building> |
+| Gemini CLI | `gemini extensions install https://github.com/Edel-Finance/edel-ai-config` | Skill plus Development and TestNet MCP | Same URL and header, not run | structure-checked | <https://geminicli.com/docs/extensions/reference/> |
+| Pi | `pi install git:github.com/Edel-Finance/edel-ai-config` | Skill only (Pi has no MCP); REST through the skill | Not applicable | structure-checked | <https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/packages.md> |
+| OpenClaw | `openclaw skills install git:Edel-Finance/edel-ai-config` | Skill; MCP from `mcp/servers.json` | Same URL and header, not run | structure-checked | <https://docs.openclaw.ai> |
+| ChatGPT custom GPT | Paste [chatgpt/](chatgpt/README.md) files into a GPT | Public read-only market data, no trading | Not applicable (REST Actions) | structure-checked; every action route answered on TestNet | <https://help.openai.com/en/articles/9442513> |
+| ChatGPT MCP plugin | none | none | ChatGPT cannot send an API key | not yet | <https://developers.openai.com/plugins/build/auth> |
+
 ## Install by harness
 
 ### Claude Code
@@ -143,6 +165,38 @@ openclaw skills install git:Edel-Finance/edel-ai-config
 
 Or copy `.openclaw/skills/edel-markets` into `~/.openclaw/skills/edel-markets`, then add the
 MCP entries from [mcp/servers.json](mcp/servers.json) to your OpenClaw MCP configuration.
+
+### Cursor
+
+`.cursor-plugin/plugin.json` carries the skill and both MCP servers. The plugin is not in the
+Cursor Marketplace yet. Add this repository as a team marketplace, or load a clone with
+`cursor-agent --plugin-dir <clone>`. Set
+`EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) as a plugin variable under Plugins, then
+Configure. Never commit a key.
+
+### Gemini CLI
+
+```sh
+gemini extensions install https://github.com/Edel-Finance/edel-ai-config
+```
+
+The install asks for your TestNet and Development keys and keeps them in the extension's own
+settings, marked sensitive. Leave one empty to skip that environment. Verify with
+`gemini extensions list` and `/mcp` inside Gemini CLI.
+
+### Pi
+
+```sh
+pi install git:github.com/Edel-Finance/edel-ai-config
+```
+
+Pi loads the `edel-markets` skill from `skills/`. Pi has no MCP client, so the skill uses the REST
+API directly and follows `skills/edel-markets/AUTH.md`. Verify with `pi list`.
+
+### ChatGPT
+
+See [chatgpt/README.md](chatgpt/README.md). A custom GPT reads public market data through Actions.
+ChatGPT cannot connect to the Edel MCP yet, because it does not send API keys.
 
 ### Install the skill only (any Agent Skills client)
 

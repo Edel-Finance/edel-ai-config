@@ -1,0 +1,278 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Edel PERPS public market data",
+    "version": "1.0.0",
+    "description": "Read-only public routes of the Edel PERPS REST API. Source of truth: GET /openapi.json on the same origin."
+  },
+  "servers": [
+    {
+      "url": "https://testnet.edel-api.xyz"
+    }
+  ],
+  "paths": {
+    "/v1/system/status": {
+      "get": {
+        "operationId": "getSystemStatus",
+        "summary": "Get the venue status",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        }
+      }
+    },
+    "/v1/auth/capabilities": {
+      "get": {
+        "operationId": "getAuthCapabilities",
+        "summary": "Get authentication capabilities",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        }
+      }
+    },
+    "/v1/markets": {
+      "get": {
+        "operationId": "listMarkets",
+        "summary": "List markets",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        }
+      }
+    },
+    "/v1/leaderboard": {
+      "get": {
+        "operationId": "getLeaderboard",
+        "summary": "Get the projected realized-PnL leaderboard",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        },
+        "parameters": [
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly",
+                "all_time"
+              ],
+              "default": "daily"
+            },
+            "description": "UTC ranking window. Defaults to daily."
+          },
+          {
+            "name": "metric",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "projected_realized_pnl"
+              ],
+              "default": "projected_realized_pnl"
+            },
+            "description": "Ranked metric. Only projected_realized_pnl is currently proven."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "default": 50
+            },
+            "description": "Page size, from 1 to 100."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Opaque cursor pinning the board version, the participant view and the last rank."
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "human",
+                "bot",
+                "agent"
+              ]
+            },
+            "description": "Participant view: all (humans, agents and bots, the default), human, agent or bot."
+          }
+        ]
+      }
+    },
+    "/v1/markets/{marketId}": {
+      "get": {
+        "operationId": "getMarketSnapshot",
+        "summary": "Get a market snapshot",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        },
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/markets/{marketId}/stats": {
+      "get": {
+        "operationId": "getMarketStats",
+        "summary": "Get market stats",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        },
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/markets/{marketId}/book": {
+      "get": {
+        "operationId": "getMarketBook",
+        "summary": "Get the order book",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        },
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/markets/{marketId}/candles": {
+      "get": {
+        "operationId": "getMarketCandles",
+        "summary": "Get market candles",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        },
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "series",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "trade",
+                "index",
+                "mark"
+              ],
+              "default": "index"
+            },
+            "description": "Candle source series. Defaults to index. series=mark is declared but not served yet: HTTP 400 operation_not_available, retryable=false."
+          },
+          {
+            "name": "tf",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1m",
+                "3m",
+                "5m",
+                "15m",
+                "30m",
+                "1h",
+                "2h",
+                "4h",
+                "8h",
+                "12h",
+                "1d",
+                "3d",
+                "1w",
+                "1M"
+              ],
+              "default": "1m"
+            },
+            "description": "Candle timeframe. Defaults to 1m. Unknown timeframes return HTTP 400 invalid_request."
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            },
+            "description": "Optional inclusive nonnegative safe-integer epoch-millisecond string for the start of [from, to); align to the timeframe boundary."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            },
+            "description": "Optional exclusive nonnegative safe-integer epoch-millisecond string for the end of [from, to); align to the timeframe boundary."
+          }
+        ]
+      }
+    }
+  }
+}

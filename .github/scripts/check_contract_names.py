@@ -61,6 +61,22 @@ def main():
             if route not in known_routes:
                 missing.append(f"{rel}: route {method} {path} is not in {OPENAPI_URL}")
 
+    # The ChatGPT Actions schema is a hand-kept subset, so each operation must match the live one.
+    live_ops = {
+        operation.get("operationId"): (method, normalize(path), {p.get("name") for p in operation.get("parameters", [])})
+        for path, operations in spec["paths"].items()
+        for method, operation in operations.items()
+        if method in METHODS
+    }
+    actions_file = ROOT_DIR / "chatgpt" / "actions.openapi.json"
+    for path, operations in json.loads(actions_file.read_text(encoding="utf-8"))["paths"].items():
+        for method, operation in operations.items():
+            op_id = operation["operationId"]
+            params = {p["name"] for p in operation.get("parameters", [])}
+            live = live_ops.get(op_id)
+            if method != "get" or not live or live[:2] != (method, normalize(path)) or not params <= live[2]:
+                missing.append(f"chatgpt/actions.openapi.json: {method.upper()} {path} ({op_id}) does not match {OPENAPI_URL}")
+
     for line in missing:
         print(line)
     print(f"Checked against {len(known_routes)} routes and {len(known_tools)} tools.")
