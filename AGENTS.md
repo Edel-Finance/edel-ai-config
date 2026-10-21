@@ -9,7 +9,9 @@ API. Nothing else.
   references, the plugin and skill manifests for Claude Code (`.claude-plugin/`), Codex
   (`.codex-plugin/`, `.agents/plugins/`, `skills/.codex-plugin/`), Grok (`.grok-plugin/`,
   `skills/plugin.json`, `skills/.mcp.json`), Antigravity (`plugin.json`, `mcp_config.json`),
-  Hermes (`plugin.json`), OpenClaw (`.openclaw/skills/`), the shared `.mcp.json` and
+  Hermes (`plugin.json`, `mcp.json`), Cursor (`.cursor-plugin/`), Gemini CLI
+  (`gemini-extension.json`), Pi (the conventional `skills/` folder), ChatGPT (`chatgpt/`),
+  OpenClaw (`.openclaw/skills/`), the shared `.mcp.json` and
   generic client config in `mcp/`, the shell helpers in `scripts/` (`connect.sh`, `smoke.sh`, and
   the offline `check.sh` that tests them), the `contract-names` CI check in `.github/`, and the
   hourly `sync-public-tools` workflow that regenerates `skills/edel-markets/TOOLS.md` from the same
@@ -32,6 +34,8 @@ API. Nothing else.
   key in a repo file or on a command line, and never another person's browser session.
 - No copied OpenAPI, AsyncAPI, Postman or realtime contract files. Link to the live docs and the
   live `GET /openapi.json` instead. Copies drift.
+  One exception: `chatgpt/actions.openapi.json` is a small read-only subset for a custom GPT,
+  because a GPT needs only the public reads. `contract-names` fails when it drifts.
 - Public API only. Document the routes and channels in the public OpenAPI and AsyncAPI documents,
   including their use by public trading bots. Do not document Admin, operator or internal
   bot-control surfaces, internal service hostnames, environment variables, provider request

@@ -1,0 +1,29 @@
+{
+  "name": "edel",
+  "version": "1.1.0",
+  "description": "Edel PERPS public API skill plus the public Edel MCP for Development and TestNet, authenticated with your own API key.",
+  "settings": [
+    {
+      "name": "Development MCP API key",
+      "description": "Your own Edel API key for Development, approved with your passkey. Leave empty to skip Development.",
+      "envVar": "EDEL_MCP_KEY_DEVELOPMENT",
+      "sensitive": true
+    },
+    {
+      "name": "TestNet MCP API key",
+      "description": "Your own Edel API key for TestNet, approved with your passkey. Leave empty to skip TestNet.",
+      "envVar": "EDEL_MCP_KEY_TESTNET",
+      "sensitive": true
+    }
+  ],
+  "mcpServers": {
+    "edel-development": {
+      "httpUrl": "https://mcp-dev.edel-api.xyz/mcp",
+      "headers": { "Authorization": "Bearer ${EDEL_MCP_KEY_DEVELOPMENT}" }
+    },
+    "edel-testnet": {
+      "httpUrl": "https://mcp-testnet.edel-api.xyz/mcp",
+      "headers": { "Authorization": "Bearer ${EDEL_MCP_KEY_TESTNET}" }
+    }
+  }
+}

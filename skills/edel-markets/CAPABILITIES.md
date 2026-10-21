@@ -135,7 +135,7 @@ offer it.
 | Backtest with a probability estimate | `edel_agent_backtest` | `POST /v1/accounts/{accountId}/agents/backtest` | `agents` | same |
 | Deploy a paper agent | `edel_agent_deploy` | `POST /v1/accounts/{accountId}/agents` | `agents` | same |
 | List agents | `edel_agents` | `GET /v1/accounts/{accountId}/agents` | `agents` | same |
-| Pause, resume, start, stop, delete | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/stop`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` | `agents` | same |
+| Pause, resume, start, delete | `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` | `agents` | same |
 | Choose the model | `edel_agent_model` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/model` | `agents` | same |
 | Rename an agent | `edel_agent_rename` | Not in the live contract yet. | `agents` | same |
 | Send a message to an agent | `edel_agent_chat` | Not in the live contract yet. | `agents` | same |
