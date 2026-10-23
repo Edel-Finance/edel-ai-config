@@ -72,6 +72,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_positions` | `GET /v1/accounts/{accountId}/positions` |
 | `edel_preview_order` | `POST /v1/orders/preview` |
 | `edel_price` | `GET /v1/markets/{marketId}/stats`, `GET /v1/markets/{marketId}/book` |
+| `edel_replace_order` | `POST /v1/orders/{orderId}/replace` |
 | `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` |
 | `edel_system_status` | `GET /v1/system/status` |
 | `edel_terms` | `GET /v1/accounts/{accountId}/terms` |
