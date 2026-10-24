@@ -82,5 +82,6 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_withdraw` | `GET /v1/accounts/{accountId}/party`, `POST /v1/withdrawals` |
 | `edel_withdrawal` | `GET /v1/withdrawals/{withdrawalId}` |
 | `edel_withdrawal_confirm` | `POST /v1/withdrawals/{withdrawalId}/confirm` |
+| `edel_withdrawal_party_transfer` | `POST /v1/withdrawals/{withdrawalId}/party-transfer` |
 | `edel_withdrawal_settle` | `GET /v1/withdrawals/{withdrawalId}`, `POST /v1/withdrawals/{withdrawalId}/authorize` |
 | `edel_xreserve_deposit` | `GET /v1/accounts/{accountId}/xreserve-deposit` |
