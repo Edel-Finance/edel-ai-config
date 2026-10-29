@@ -21,15 +21,30 @@ scopes="${3:-read}"
 case "$env_name" in
   development) api="https://dev.edel-api.xyz" ;;
   testnet) api="https://testnet.edel-api.xyz" ;;
-  *) echo "usage: scripts/connect.sh <development|testnet> <claude|keychain> [scopes]" >&2; exit 2 ;;
+  *)
+    echo "usage: scripts/connect.sh <development|testnet> <claude|keychain> [scopes]" >&2
+    exit 2
+    ;;
 esac
 case "$target" in
-  claude) command -v claude >/dev/null || { echo "claude CLI not found" >&2; exit 2; } ;;
-  keychain) command -v security >/dev/null || { echo "macOS security tool not found" >&2; exit 2; } ;;
-  *) echo "target must be claude or keychain" >&2; exit 2 ;;
+  claude) command -v claude >/dev/null || {
+    echo "claude CLI not found" >&2
+    exit 2
+  } ;;
+  keychain) command -v security >/dev/null || {
+    echo "macOS security tool not found" >&2
+    exit 2
+  } ;;
+  *)
+    echo "target must be claude or keychain" >&2
+    exit 2
+    ;;
 esac
 case "$scopes" in
-  *[!a-z,]*|"") echo "scopes must be a comma separated list such as read,trade" >&2; exit 2 ;;
+  *[!a-z,]* | "")
+    echo "scopes must be a comma separated list such as read,trade" >&2
+    exit 2
+    ;;
 esac
 
 field() {
@@ -71,7 +86,8 @@ post() {
   curl -sS -m 30 -X POST "$api$1" -H 'content-type: application/json' --data @- -w '\n%{http_code}'
 }
 
-scope_list=$(printf '"%s",' ${scopes//,/ })
+IFS=, read -r -a scope_values <<<"$scopes"
+scope_list=$(printf '"%s",' "${scope_values[@]}")
 answer=$(printf '{"clientName":"edel-ai-config","scopes":[%s]}' "${scope_list%,}" | post /v1/agent-connect/start)
 status=${answer##*$'\n'}
 body=${answer%$'\n'*}
@@ -104,15 +120,27 @@ while [ "$SECONDS" -lt "$deadline" ]; do
   case "$(field status "$body")" in
     authorization_pending) ;;
     slow_down) [ "$interval" -ge 60 ] || interval=$((interval + 5)) ;;
-    approved) api_key=$(need apiKey "$body" "$key_re"); break ;;
-    expired) echo "The approval expired. Run the script again." >&2; exit 1 ;;
-    *) echo "complete refused: HTTP $(safe "$status") code=$(safe "$(field code "$body")") requestId=$(safe "$(field requestId "$body")")" >&2; exit 1 ;;
+    approved)
+      api_key=$(need apiKey "$body" "$key_re")
+      break
+      ;;
+    expired)
+      echo "The approval expired. Run the script again." >&2
+      exit 1
+      ;;
+    *)
+      echo "complete refused: HTTP $(safe "$status") code=$(safe "$(field code "$body")") requestId=$(safe "$(field requestId "$body")")" >&2
+      exit 1
+      ;;
   esac
 done
 unset connect_code
 case "$api_key" in
   edel_ak_*) ;;
-  *) echo "No key was approved in time. Run the script again." >&2; exit 1 ;;
+  *)
+    echo "No key was approved in time. Run the script again." >&2
+    exit 1
+    ;;
 esac
 
 case "$target" in

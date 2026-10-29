@@ -21,7 +21,7 @@ cat >"$work/bin/curl" <<'STUB'
 url="" data=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --data) data="$2"; [ "$2" != @- ] || cat >/dev/null; shift ;;
+    --data) data="$2"; [ "$2" != @- ] || cat >"${FAKE_CAPTURE:-/dev/null}"; shift ;;
     --config) cat >/dev/null; shift ;;
     http*) url="$1" ;;
   esac
@@ -69,6 +69,51 @@ expect_refused "missing connectCode is named" "has no connectCode field" \
   env FAKE_CASE=missing bash "$root/scripts/connect.sh" development claude
 expect_refused "missing tool names are named" "no result.tools[].name field" \
   env FAKE_CASE=notools EDEL_MCP_KEY_DEVELOPMENT=fake bash "$root/scripts/smoke.sh" development
+
+capture="$work/scopes.json"
+PATH="$work/bin:$PATH" FAKE_CASE=missing FAKE_CAPTURE="$capture" bash "$root/scripts/connect.sh" development claude read,trade >/dev/null 2>&1 || true
+if [ "$(cat "$capture")" = '{"clientName":"edel-ai-config","scopes":["read","trade"]}' ]; then
+  echo "ok: multiple scopes remain separate quoted values"
+else
+  echo "FAIL: scope serialization"
+  failures=$((failures + 1))
+fi
+rm -f "$capture"
+PATH="$work/bin:$PATH" FAKE_CASE=missing FAKE_CAPTURE="$capture" bash "$root/scripts/connect.sh" development claude 'read,*' >/dev/null 2>&1 && failures=$((failures + 1))
+if [ ! -e "$capture" ]; then
+  echo "ok: invalid scope refuses before any request"
+else
+  echo "FAIL: invalid scope reached request"
+  failures=$((failures + 1))
+fi
+
+hook_bin="$work/hook-bin"
+mkdir "$hook_bin"
+for tool in npm shfmt shellcheck bash; do
+  cat >"$hook_bin/$tool" <<'HOOK_STUB'
+#!/bin/sh
+name=${0##*/}
+if [ "$name:$*" = "shfmt:--version" ]; then
+  echo v3.14.1
+  exit 0
+fi
+printf '%s\n' "$name" >> "$HOOK_LOG"
+[ "$name" != "${HOOK_FAIL:-}" ]
+HOOK_STUB
+  chmod +x "$hook_bin/$tool"
+done
+for failure in none shellcheck; do
+  hook_log="$work/hook-$failure"
+  code=0
+  PATH="$hook_bin:$PATH" HOOK_LOG="$hook_log" HOOK_FAIL="$failure" sh "$root/.githooks/pre-push" >/dev/null 2>&1 || code=$?
+  if { [ "$failure" = none ] && [ "$code" = 0 ] && [ "$(tail -1 "$hook_log")" = bash ]; } ||
+    { [ "$failure" = shellcheck ] && [ "$code" != 0 ] && [ "$(tail -1 "$hook_log")" = shellcheck ]; }; then
+    echo "ok: pre-push propagates $failure gate outcome"
+  else
+    echo "FAIL: pre-push $failure gate"
+    failures=$((failures + 1))
+  fi
+done
 
 echo "failures: $failures"
 [ "$failures" = 0 ]

@@ -66,6 +66,7 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
 - The scripts treat every remote value as untrusted. Check each one against a strict pattern
   before use, numbers as digits only before any bash arithmetic, and stop with a line that names a
   missing field. Run `scripts/check.sh` after any script change.
+- Before pushing, run the tracked offline gate with `git -c core.hooksPath=.githooks push`: Prettier 3.9.10 for changed policy Markdown, shfmt 3.14.1 for shell formatting, ShellCheck 0.11.0, then all offline mock checks. CI installs these development tools; they add no runtime capability. Python is unchanged and has no configured formatter/linter.
 
 ## Style
 

@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+npm exec --offline --package prettier@3.9.10 -- prettier --check CODING_STANDARDS.md GLOSSARY.md AGENTS.md .github/pull_request_template.md
+[ "$(shfmt --version)" = "v3.14.1" ]
+shfmt -i 2 -ci -d scripts/connect.sh scripts/check.sh .githooks/pre-push
+shellcheck scripts/*.sh .githooks/pre-push
+bash scripts/check.sh
