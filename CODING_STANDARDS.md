@@ -4,6 +4,17 @@ Use these judgments when changing public skills and client documentation.
 [AGENTS.md](AGENTS.md) remains authoritative for scope, security and owner permission.
 Mechanical checks belong in existing tooling, not in this review guide.
 
+## Owner coding rules
+
+- Before adding logic, inspect the reusable core (`packages/`, crates or shared libraries) and reuse or extend it instead of duplicating behavior.
+- TypeScript forbids nested ternaries; use a switch or lookup map for repeated equality dispatch on one stable subject, while allowing unrelated conditions.
+- Validate the whole input schema first at each boundary, then throw or emit one existing typed validation-error event; avoid scattered field checks.
+- TypeScript uses Zod wherever performance permits, always for endpoints, MCP tools, config and messages; Rust uses serde plus garde/validator or typed newtypes; Python uses pydantic; C++ may validate explicitly at the boundary when library overhead would harm performance.
+- Keep [GLOSSARY.md](GLOSSARY.md) current and review ambiguous terms; unqualified contract means a DTO/schema, while ledger and EVM smart contracts require explicit qualification.
+- Every added logic change ships with unit tests and fixtures/mocks where needed: Rust in same-file `#[cfg(test)] mod tests`, TypeScript/Python/C++ in separate neighboring or mirrored test files; missing tests are review FAIL.
+
+These rules guide new changes; they do not request a repository-wide validation-library or runtime refactor. Keep existing security and owner boundaries. Run the actual formatter, linter and all offline unit tests before pushing; DB, internal-service and end-to-end suites are separate gates.
+
 ## Establish the public contract before claiming a capability
 
 Distinguish an implemented backend feature, a published tool and a route available in the
