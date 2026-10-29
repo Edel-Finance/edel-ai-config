@@ -21,7 +21,7 @@ cat >"$work/bin/curl" <<'STUB'
 url="" data=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --data) data="$2"; [ "$2" != @- ] || cat >/dev/null; shift ;;
+    --data) data="$2"; [ "$2" != @- ] || cat >"${FAKE_CAPTURE:-/dev/null}"; shift ;;
     --config) cat >/dev/null; shift ;;
     http*) url="$1" ;;
   esac
@@ -69,6 +69,31 @@ expect_refused "missing connectCode is named" "has no connectCode field" \
   env FAKE_CASE=missing bash "$root/scripts/connect.sh" development claude
 expect_refused "missing tool names are named" "no result.tools[].name field" \
   env FAKE_CASE=notools EDEL_MCP_KEY_DEVELOPMENT=fake bash "$root/scripts/smoke.sh" development
+
+capture="$work/scopes.json"
+PATH="$work/bin:$PATH" FAKE_CASE=missing FAKE_CAPTURE="$capture" bash "$root/scripts/connect.sh" development claude read,trade >/dev/null 2>&1 || true
+if [ "$(cat "$capture")" = '{"clientName":"edel-ai-config","scopes":["read","trade"]}' ]; then
+  echo "ok: multiple scopes remain separate quoted values"
+else
+  echo "FAIL: scope serialization"
+  failures=$((failures + 1))
+fi
+rm -f "$capture"
+PATH="$work/bin:$PATH" FAKE_CASE=missing FAKE_CAPTURE="$capture" bash "$root/scripts/connect.sh" development claude ',read,,trade,' >/dev/null 2>&1 || true
+if [ "$(cat "$capture")" = '{"clientName":"edel-ai-config","scopes":["read","trade"]}' ]; then
+  echo "ok: empty separators retain prior scope normalization"
+else
+  echo "FAIL: separator normalization changed"
+  failures=$((failures + 1))
+fi
+rm -f "$capture"
+PATH="$work/bin:$PATH" FAKE_CASE=missing FAKE_CAPTURE="$capture" bash "$root/scripts/connect.sh" development claude 'read,*' >/dev/null 2>&1 && failures=$((failures + 1))
+if [ ! -e "$capture" ]; then
+  echo "ok: invalid scope refuses before any request"
+else
+  echo "FAIL: invalid scope reached request"
+  failures=$((failures + 1))
+fi
 
 echo "failures: $failures"
 [ "$failures" = 0 ]

@@ -3,9 +3,11 @@
 This repository distributes agent skills and MCP client configuration for the Edel PERPS public
 API. Nothing else.
 
+Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety rules below remain authoritative.
+
 ## Scope
 
-- Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
+- Keep it small: `README.md`, `AGENTS.md`, `CODING_STANDARDS.md`, `GLOSSARY.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
   references, the plugin and skill manifests for Claude Code (`.claude-plugin/`), Codex
   (`.codex-plugin/`, `.agents/plugins/`, `skills/.codex-plugin/`), Grok (`.grok-plugin/`,
   `skills/plugin.json`, `skills/.mcp.json`), Antigravity (`plugin.json`, `mcp_config.json`),
@@ -64,6 +66,7 @@ API. Nothing else.
 - The scripts treat every remote value as untrusted. Check each one against a strict pattern
   before use, numbers as digits only before any bash arithmetic, and stop with a line that names a
   missing field. Run `scripts/check.sh` after any script change.
+- Before pushing, run the tracked offline gate with `git -c core.hooksPath=.githooks push`: Prettier 3.9.10 for changed policy Markdown, shfmt 3.14.1 for shell formatting, ShellCheck 0.11.0, Ruff 0.15.6 for the Python gate, then all offline shell and process-fixture checks. CI installs these development tools; they add no runtime capability. The existing public-contract Python tools are unchanged; Ruff applies to the new gate and its separate unit tests.
 
 ## Style
 
