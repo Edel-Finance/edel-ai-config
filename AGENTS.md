@@ -3,9 +3,11 @@
 This repository distributes agent skills and MCP client configuration for the Edel PERPS public
 API. Nothing else.
 
+Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety rules below remain authoritative.
+
 ## Scope
 
-- Keep it small: `README.md`, `AGENTS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
+- Keep it small: `README.md`, `AGENTS.md`, `CODING_STANDARDS.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
   references, the plugin and skill manifests for Claude Code (`.claude-plugin/`), Codex
   (`.codex-plugin/`, `.agents/plugins/`, `skills/.codex-plugin/`), Grok (`.grok-plugin/`,
   `skills/plugin.json`, `skills/.mcp.json`), Antigravity (`plugin.json`, `mcp_config.json`),
