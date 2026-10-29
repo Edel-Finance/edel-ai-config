@@ -7,7 +7,7 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
 
 ## Scope
 
-- Keep it small: `README.md`, `AGENTS.md`, `CODING_STANDARDS.md`, `GLOSSARY.md`, `.gitignore`, `skills/<name>/SKILL.md` with its local
+- Keep it small: `README.md`, `AGENTS.md`, `CODING_STANDARDS.md`, `GLOSSARY.md`, `.gitignore`, the skill setup notes in `docs/agents/`, `skills/<name>/SKILL.md` with its local
   references, the plugin and skill manifests for Claude Code (`.claude-plugin/`), Codex
   (`.codex-plugin/`, `.agents/plugins/`, `skills/.codex-plugin/`), Grok (`.grok-plugin/`,
   `skills/plugin.json`, `skills/.mcp.json`), Antigravity (`plugin.json`, `mcp_config.json`),
@@ -74,3 +74,17 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
 - Skill frontmatter: one-line quoted `description` that starts with `Trigger:`.
 - Keep `SKILL.md` under about 700 tokens. Put detail in a sibling reference file.
 - Update this repo when the public contract changes, not before.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues of this repo, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `GLOSSARY.md` plus `docs/adr/`. See `docs/agents/domain.md`.
