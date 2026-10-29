@@ -86,7 +86,7 @@ post() {
   curl -sS -m 30 -X POST "$api$1" -H 'content-type: application/json' --data @- -w '\n%{http_code}'
 }
 
-IFS=, read -r -a scope_values <<<"$scopes"
+IFS=' ' read -r -a scope_values <<<"${scopes//,/ }"
 scope_list=$(printf '"%s",' "${scope_values[@]}")
 answer=$(printf '{"clientName":"edel-ai-config","scopes":[%s]}' "${scope_list%,}" | post /v1/agent-connect/start)
 status=${answer##*$'\n'}

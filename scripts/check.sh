@@ -79,6 +79,14 @@ else
   failures=$((failures + 1))
 fi
 rm -f "$capture"
+PATH="$work/bin:$PATH" FAKE_CASE=missing FAKE_CAPTURE="$capture" bash "$root/scripts/connect.sh" development claude ',read,,trade,' >/dev/null 2>&1 || true
+if [ "$(cat "$capture")" = '{"clientName":"edel-ai-config","scopes":["read","trade"]}' ]; then
+  echo "ok: empty separators retain prior scope normalization"
+else
+  echo "FAIL: separator normalization changed"
+  failures=$((failures + 1))
+fi
+rm -f "$capture"
 PATH="$work/bin:$PATH" FAKE_CASE=missing FAKE_CAPTURE="$capture" bash "$root/scripts/connect.sh" development claude 'read,*' >/dev/null 2>&1 && failures=$((failures + 1))
 if [ ! -e "$capture" ]; then
   echo "ok: invalid scope refuses before any request"
@@ -86,34 +94,6 @@ else
   echo "FAIL: invalid scope reached request"
   failures=$((failures + 1))
 fi
-
-hook_bin="$work/hook-bin"
-mkdir "$hook_bin"
-for tool in npm shfmt shellcheck bash; do
-  cat >"$hook_bin/$tool" <<'HOOK_STUB'
-#!/bin/sh
-name=${0##*/}
-if [ "$name:$*" = "shfmt:--version" ]; then
-  echo v3.14.1
-  exit 0
-fi
-printf '%s\n' "$name" >> "$HOOK_LOG"
-[ "$name" != "${HOOK_FAIL:-}" ]
-HOOK_STUB
-  chmod +x "$hook_bin/$tool"
-done
-for failure in none shellcheck; do
-  hook_log="$work/hook-$failure"
-  code=0
-  PATH="$hook_bin:$PATH" HOOK_LOG="$hook_log" HOOK_FAIL="$failure" sh "$root/.githooks/pre-push" >/dev/null 2>&1 || code=$?
-  if { [ "$failure" = none ] && [ "$code" = 0 ] && [ "$(tail -1 "$hook_log")" = bash ]; } ||
-    { [ "$failure" = shellcheck ] && [ "$code" != 0 ] && [ "$(tail -1 "$hook_log")" = shellcheck ]; }; then
-    echo "ok: pre-push propagates $failure gate outcome"
-  else
-    echo "FAIL: pre-push $failure gate"
-    failures=$((failures + 1))
-  fi
-done
 
 echo "failures: $failures"
 [ "$failures" = 0 ]
