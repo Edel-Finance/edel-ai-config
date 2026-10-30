@@ -90,3 +90,7 @@ Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `
 Single-context: root `GLOSSARY.md` plus `docs/adr/`. See `docs/agents/domain.md`.
 
 Pull requests of one feature or with dependencies are stacked with `gh stack`; see [CODING_STANDARDS.md](CODING_STANDARDS.md#stack-related-pull-requests).
+
+## Review
+
+Review starts only when CI is green at the PR head. The PR author watches CI and fixes failures first; then the two reviewers review. A reviewer that finds CI red stops and reports it without reviewing.
