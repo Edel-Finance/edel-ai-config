@@ -88,3 +88,5 @@ Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `
 ### Domain docs
 
 Single-context: root `GLOSSARY.md` plus `docs/adr/`. See `docs/agents/domain.md`.
+
+Pull requests of one feature or with dependencies are stacked with `gh stack`; see [CODING_STANDARDS.md](CODING_STANDARDS.md#stack-related-pull-requests).

@@ -56,3 +56,7 @@ existing boundary. Do not invent account state, a missing estimate, an endpoint 
 diagnosis. An unavailable route or refused credential is a reason to disclose the limitation,
 not to broaden scopes or substitute someone else's session. Keep this judgment consistent with
 [agent safety rules](AGENTS.md#safety) and each platform's narrower instructions.
+
+## Stack related pull requests
+
+Pull requests that belong to one feature, or that depend on each other, are linked with the official `gh stack` extension and land together with `gh stack merge`. A change that is part of such a stack and is opened on its own does not pass review: the reviewer gives CHANGES until it is stacked. Independent changes stay single pull requests.
