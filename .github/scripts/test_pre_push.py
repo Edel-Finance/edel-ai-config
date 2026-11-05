@@ -3,10 +3,10 @@
 import contextlib
 import io
 import os
-from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 
 from pre_push import clean_environment, gate, git, receipt
