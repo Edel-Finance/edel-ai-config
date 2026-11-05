@@ -72,8 +72,8 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
 ## Style
 
 - English only. Plain, active sentences. No em dashes.
-- Public trading skill frontmatter: one-line quoted `description` that starts with `Trigger:`. Preserve the owner-supplied canonical engineering review skill byte for byte.
-- Keep public trading `SKILL.md` under about 700 tokens. Put detail in a sibling reference file. The canonical engineering review skill retains its supplied bytes.
+- Public trading skill frontmatter: one-line quoted `description` that starts with `Trigger:`. Preserve the owner-supplied canonical engineering review content and semantics; existing repository formatting may reflow its Markdown.
+- Keep public trading `SKILL.md` under about 700 tokens. Put detail in a sibling reference file. The canonical engineering review skill retains its supplied content and semantics.
 - Update this repo when the public contract changes, not before.
 
 ## Agent skills
