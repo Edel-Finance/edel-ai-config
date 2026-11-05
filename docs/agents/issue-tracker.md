@@ -1,5 +1,7 @@
 # Issue tracker: GitHub
 
+Engineering PR review follows the [canonical Matt code-review skill](../../.agents/skills/code-review/SKILL.md): one fixed target, two independent parallel agents (Standards and Spec), with reports side by side.
+
 Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
 
 ## Conventions

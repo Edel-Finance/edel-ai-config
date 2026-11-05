@@ -7,6 +7,7 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
 
 ## Scope
 
+- Keep the owner-selected engineering review skill and provenance at `.agents/skills/code-review/`; it is repository policy, not a distributed public trading capability.
 - Keep it small: `README.md`, `AGENTS.md`, `CODING_STANDARDS.md`, `GLOSSARY.md`, `.gitignore`, the skill setup notes in `docs/agents/`, `skills/<name>/SKILL.md` with its local
   references, the plugin and skill manifests for Claude Code (`.claude-plugin/`), Codex
   (`.codex-plugin/`, `.agents/plugins/`, `skills/.codex-plugin/`), Grok (`.grok-plugin/`,
@@ -50,7 +51,7 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
 - No secrets, tokens, tickets, passkeys, private keys, connection strings or Party identifiers,
   in any file, example, commit or log. Examples hold credentials in memory only and print only
   status, booleans, `code`, `retryable` and `requestId`. Never put a credential on a command line.
-- Authentication comes first. Every skill must require the AUTH.md order: capabilities, signing
+- Authentication comes first. Every public trading skill must require the AUTH.md order: capabilities, signing
   identity, login, account id, reads, then an `active` Canton Party binding before any trade,
   then explicit owner permission per money action.
 - A Canton Party binding is not the signing identity. Registration creates the passkey and the
@@ -71,8 +72,8 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
 ## Style
 
 - English only. Plain, active sentences. No em dashes.
-- Skill frontmatter: one-line quoted `description` that starts with `Trigger:`.
-- Keep `SKILL.md` under about 700 tokens. Put detail in a sibling reference file.
+- Public trading skill frontmatter: one-line quoted `description` that starts with `Trigger:`. Preserve the owner-supplied canonical engineering review skill byte for byte.
+- Keep public trading `SKILL.md` under about 700 tokens. Put detail in a sibling reference file. The canonical engineering review skill retains its supplied bytes.
 - Update this repo when the public contract changes, not before.
 
 ## Agent skills
@@ -90,3 +91,11 @@ Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `
 Single-context: root `GLOSSARY.md` plus `docs/adr/`. See `docs/agents/domain.md`.
 
 Pull requests of one feature or with dependencies are stacked with `gh stack`; see [CODING_STANDARDS.md](CODING_STANDARDS.md#stack-related-pull-requests).
+
+## Canonical engineering review policy
+
+Load the [canonical Matt code-review skill](.agents/skills/code-review/SKILL.md) for every engineering PR review. Pin one complete candidate head and fixed main commit/merge-base, link the originating spec issue, and run exactly two independent agents in parallel: **Standards** and **Spec**. Load repository standards, relevant domain rules and the skill's Fowler smell baseline; publish the actual reports side by side under the personal GitHub user `ogarciarevett`. The author does not supply their own approval.
+
+Start review only after CI is green at that head. Preserve valid approvals, original reports and reviewer history. These are two agents in one review, not two mandatory rounds or an automatic second whole review. Actual source corrections may receive scoped confirmation from the same reviewers; PR metadata changes do not reset code review. The `pr` skill is a PR body template, not another reviewer. Designer review applies only to actual visual work. Security, money and test-integrity criteria belong within the two axes and existing domain standards. Explicitly invoked standalone adversarial reviews retain their own contracts and are not automatic PR gates.
+
+Two actual code PASS reports plus current CI and Designer PASS only for visual work allow the whole compatible official `gh stack` to merge with `gh stack merge`, without another Chief approval or Development soak. Preserve all actual hooks, CI gates and meaningful tests. Merge permission does not authorize deployment, money actions or issue closure: issues close only with MainNet acceptance proof. Use `Refs` for this policy slice. All GitHub writes use `ogarciarevett`; the App is read-only for CI/Actions. Verify the effective `gh api user` before publication without changing authentication or accounts.
