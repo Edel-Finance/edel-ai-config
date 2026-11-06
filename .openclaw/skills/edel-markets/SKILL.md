@@ -32,8 +32,8 @@ Never state a limit, scope, field or status from memory. Quote the route descrip
   a file only you can read. Report only status, booleans, `code`, `retryable`, `requestId`.
 - Send `Idempotency-Key` wherever the live contract marks it required. Reuse the same key and
   the same `clientOrderId` when you retry the same intent.
-- Money values are atom strings. Never do float math on them. Read `settlementAssetDecimals`
-  from `GET /v1/markets`; never hard code it.
+- Money values are atom strings. Never do float math on them. AUTH.md has the decimals and
+  margin rules.
 - Stream live state over WebSockets. Do not poll REST for data a channel pushes.
 - Agent modes (paper or live) and where each runs come from the `agents` scope row that
   CAPABILITIES.md quotes. A backtest probability is a historical estimate, not a guarantee.

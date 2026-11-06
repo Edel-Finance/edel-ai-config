@@ -32,11 +32,11 @@ per-platform runs in this table were made before that.
 
 | Platform | Install | What it can do | MCP tool call | Status | Format doc |
 | --- | --- | --- | --- | --- | --- |
-| Claude Code | `claude plugin install edel@edel-ai-config` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested | <https://code.claude.com/docs/en/plugins-reference> |
-| Codex | `codex plugin add edel@edel-ai-config` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested | <https://developers.openai.com/codex/plugins> |
-| Grok | `grok plugin install Edel-Finance/edel-ai-config --trust` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested | `grok plugin --help` |
-| Antigravity | `agy plugin install .` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested | `agy plugin validate --help` |
-| Hermes | `hermes plugins install Edel-Finance/edel-ai-config --enable` | Skill; MCP added with `hermes mcp add` | Reaches server, needs `edel_connect` key | tested | <https://agent-plugins.org> |
+| Claude Code | `claude plugin install edel@edel-ai-config` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | <https://code.claude.com/docs/en/plugins-reference> |
+| Codex | `codex plugin add edel@edel-ai-config` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | <https://developers.openai.com/codex/plugins> |
+| Grok | `grok plugin install Edel-Finance/edel-ai-config --trust` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | `grok plugin --help` |
+| Antigravity | `agy plugin install .` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | `agy plugin validate --help` |
+| Hermes | `hermes plugins install Edel-Finance/edel-ai-config --enable` | Skill; MCP added with `hermes mcp add` | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | <https://agent-plugins.org> |
 | Cursor | `cursor-agent --plugin-dir <clone>`, or a team marketplace | Skill plus MainNet, TestNet and Development MCP | Same URL and header, not run | structure-checked | <https://cursor.com/docs/plugins/building> |
 | Gemini CLI | `gemini extensions install https://github.com/Edel-Finance/edel-ai-config` | Skill plus MainNet, TestNet and Development MCP | Same URL and header, not run | structure-checked | <https://geminicli.com/docs/extensions/reference/> |
 | Pi | `pi install git:github.com/Edel-Finance/edel-ai-config` | Skill only (Pi has no MCP); REST through the skill | Not applicable | structure-checked | <https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/packages.md> |
@@ -80,8 +80,7 @@ per-platform runs in this table were made before that.
    ```
 
 2. Export `EDEL_MCP_KEY_MAINNET`, `EDEL_MCP_KEY_TESTNET` or `EDEL_MCP_KEY_DEVELOPMENT` from your
-   secret store before
-   starting Codex.
+   secret store before starting Codex.
 
 3. Verify the installed plugin and MCP servers:
 
@@ -100,8 +99,7 @@ per-platform runs in this table were made before that.
    ```
 
 2. Export `EDEL_MCP_KEY_MAINNET`, `EDEL_MCP_KEY_TESTNET` or `EDEL_MCP_KEY_DEVELOPMENT` from your
-   secret store before
-   starting Antigravity.
+   secret store before starting Antigravity.
 
 3. Verify the installed plugin, skill and MCP servers:
 
@@ -127,8 +125,7 @@ per-platform runs in this table were made before that.
    ```
 
 2. Export `EDEL_MCP_KEY_MAINNET`, `EDEL_MCP_KEY_TESTNET` or `EDEL_MCP_KEY_DEVELOPMENT` from your
-   secret store before
-   starting Grok.
+   secret store before starting Grok.
 
 3. Verify the installed plugin and MCP servers:
 

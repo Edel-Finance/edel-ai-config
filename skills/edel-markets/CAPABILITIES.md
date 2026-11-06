@@ -232,16 +232,23 @@ AsyncAPI document own each channel, its payload and its authentication.
 
 ## WebSocket channels
 
-| Group | Channels | Authentication |
+This is an index of the public channel groups, not a contract. The
+[realtime reference](https://docs.edel.finance/developers/realtime-reference) lists every channel
+with its own page, for example
+[account.margin](https://docs.edel.finance/developers/realtime/account-margin). Read the page
+before you subscribe.
+
+| Group | What it streams | Authentication |
 | --- | --- | --- |
-| `market.*` | `market.trades`, `market.book`, `market.ticker`, `market.price`, `market.funding`, `market.status`, `market.candles` | none |
-| `markets.prices` | All market prices in one stream | none |
-| `system.status` | Venue state | none |
-| `account.*` | `account.orders`, `account.fills`, `account.positions`, `account.pnl`, `account.margin`, `account.balance`, `account.deposits`, `account.withdrawals`, `account.settlement`, `account.durability`, `account.reconciliation`, `account.alerts`, `account.earnings`, `account.performance`, `account.agents`, `account.fee-share-offers`, `account.squid-transfers`, `account.xreserve-bridge` | realtime ticket |
+| `market.*` | Public data of one market | none |
+| `markets.prices` | Prices of all markets in one stream | none |
+| `system.status` | The venue state | none |
+| `account.*` | The owner's orders, fills, positions, margin, balances, funding and agents | realtime ticket |
 
-Recent fields:
+Two fields that a client must not miss, quoted from the AsyncAPI field descriptions:
 
-- `account.margin` frames carry `initialMarginAtoms`, the account-wide initial margin in
-  settlement-asset atoms. A legacy producer leaves it out.
-- Every `account.orders` lifecycle frame carries the stored order attributes when the venue has
-  them: `orderType`, `postOnly`, `reduceOnly` and `timeInForce`.
+- `initialMarginAtoms` on [account.margin](https://docs.edel.finance/developers/realtime/account-margin):
+  "Account-wide initial margin in settlement-asset atoms [...] Absent from legacy producers."
+- The stored order attributes `orderType`, `postOnly`, `reduceOnly` and `timeInForce` on
+  [account.orders](https://docs.edel.finance/developers/realtime/account-orders): "Present on every
+  order lifecycle frame when stored".

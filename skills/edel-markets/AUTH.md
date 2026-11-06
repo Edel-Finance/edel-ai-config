@@ -86,8 +86,8 @@ username; do not register again.
    credential result, and a fresh Google token for the same subject. Success is
    `external-auth-register-complete/v1`.
 
-Each flow has one passkey prompt. Registration is Google sign-in plus one passkey. There is no
-passkey-only account.
+Registration is a Google sign-in plus one passkey (steps 2 to 4 above). There is no passkey-only
+registration; `delegatedRegistration` in step 0 says so.
 
 Registration creates the DFNS end-user credential, the delegated signing key and the Edel account
 mapping. It does not create a Canton Party binding. The `walletState` field in this response is
@@ -133,8 +133,12 @@ Source: <https://docs.edel.finance/developers/accounts/for-agents> ("Connect wit
 4. Send `Authorization: Bearer <apiKey>`. Keep the key in a file only you can read. For MCP, put
    the same header on every request.
 
-A key expires in 24 hours by default and in 7 days at most. `GET /v1/api-keys/current` confirms the
-key's scopes and expiry. A key never signs, never changes
+For expiry, the "What a key can do" section of
+[for-agents](https://docs.edel.finance/developers/accounts/for-agents#what-a-key-can-do) says:
+
+> A key expires (24 hours by default, 7 days at most) and the owner can revoke it.
+
+`GET /v1/api-keys/current` confirms the key's scopes and expiry. A key never signs, never changes
 the Party binding and never approves another agent. Only the owner lists or revokes keys.
 
 ## Passkeys belong to one venue
@@ -152,12 +156,17 @@ owner's whole profile; a section it cannot read is null and named in `unavailabl
 
 ## Money units and margin
 
-- Read `settlementAsset` and `settlementAssetDecimals` from `GET /v1/markets`. Never hard code the
-  decimals. Today USD.E (Development) and USDCx (TestNet, MainNet) both have 10 decimals.
-- Every money value is an integer string of atoms: 10^-`settlementAssetDecimals` units of the
-  settlement asset. Never do float math on it.
-- `marginMode` on the account snapshot is always `cross`. Quote its description in the live
-  contract; do not offer isolated margin.
+- Read `settlementAsset` and `settlementAssetDecimals` from `GET /v1/markets` of your venue every
+  session. Never hard code the decimals. The live contract describes the field:
+
+  > Decimal places of settlementAsset: every collateral amount (balances, margin, PnL, fees,
+  > deposits, withdrawals) is an integer count of 10^-settlementAssetDecimals units of it.
+
+  An example, not a rule: on 2026-11-06 `GET /v1/markets` answered USD.E on Development and USDCx
+  on TestNet and MainNet, all with 10 decimals.
+- Money values are atom strings. Never do float math on them.
+- The live contract describes `marginMode` on the account snapshot as "Always cross: margin is held
+  per account across all positions and orders." Do not offer isolated margin.
 
 ## Step 3: learn the account id
 
