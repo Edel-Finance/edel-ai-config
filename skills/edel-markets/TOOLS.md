@@ -54,6 +54,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_close_position` | `GET /v1/accounts/{accountId}/positions`, `POST /v1/orders` |
 | `edel_connect` | `POST /v1/agent-connect/start`, `POST /v1/agent-connect/complete`, `GET /v1/api-keys/current` |
 | `edel_deposit` | `POST /v1/accounts/{accountId}/deposits` |
+| `edel_deposit_capabilities` | `GET /v2/accounts/{accountId}/deposit-capabilities` |
 | `edel_deposit_confirm` | `POST /v1/accounts/{accountId}/deposits/confirm` |
 | `edel_faucet_grant` | `POST /v1/accounts/{accountId}/faucet-grant` |
 | `edel_fee_ladder` | `GET /v1/fee-tiers` |
@@ -87,6 +88,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_trade_history` | `GET /v1/accounts/{accountId}/fills` |
 | `edel_transfers` | `GET /v1/accounts/{accountId}/transfers` |
 | `edel_treasury_credits` | `GET /v1/accounts/{accountId}/treasury-credits` |
+| `edel_venue_collateral` | `GET /v2/venue/collateral` |
 | `edel_venue_totals` | `GET /v2/venue/totals` |
 | `edel_withdraw` | `GET /v1/accounts/{accountId}/party`, `POST /v1/withdrawals` |
 | `edel_withdrawal` | `GET /v1/withdrawals/{withdrawalId}` |
