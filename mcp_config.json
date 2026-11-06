@@ -1,5 +1,12 @@
 {
   "mcpServers": {
+    "edel-mainnet": {
+      "type": "http",
+      "url": "https://mcp.edel-api.xyz/mcp",
+      "headers": {
+        "Authorization": "Bearer ${EDEL_MCP_KEY_MAINNET}"
+      }
+    },
     "edel-development": {
       "type": "http",
       "url": "https://mcp-dev.edel-api.xyz/mcp",
@@ -13,11 +20,6 @@
       "headers": {
         "Authorization": "Bearer ${EDEL_MCP_KEY_TESTNET}"
       }
-    },
-    "edel-production": {
-      "type": "http",
-      "url": "",
-      "disabled": true
     }
   }
 }

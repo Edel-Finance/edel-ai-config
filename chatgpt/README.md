@@ -4,15 +4,16 @@ ChatGPT has two ways in: a custom GPT with Actions, and a custom MCP plugin.
 
 ## Custom GPT with Actions (works now)
 
-This GPT reads public TestNet market data through the REST API. It needs no key and cannot trade.
+This GPT reads public MainNet market data through the REST API. It needs no key and cannot trade.
 
 1. In ChatGPT, open Explore GPTs, then Create, then Configure.
 2. Paste [instructions.md](instructions.md) into Instructions.
 3. Under Actions, choose Create new action. Paste the whole of
    [actions.openapi.json](actions.openapi.json) into Schema. Set Authentication to None.
-4. Ask the GPT for the TestNet markets to test it.
+4. Ask the GPT for the MainNet markets to test it.
 
-For Development, change `servers[0].url` to `https://dev.edel-api.xyz` before you paste.
+`servers[0].url` is MainNet, the default. To test on TestNet, change it to
+`https://testnet.edel-api.xyz` before you paste. For Development, use `https://dev.edel-api.xyz`.
 
 `actions.openapi.json` is a small read-only subset of the live `GET /openapi.json`, because a GPT
 needs only the public reads. The `contract-names` CI check

@@ -1,6 +1,11 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
+    "edel-mainnet": {
+      "type": "streamable-http",
+      "url": "https://mcp.edel-api.xyz/mcp",
+      "headers": { "Authorization": "Bearer ${EDEL_MCP_KEY_MAINNET}" }
+    },
     "edel-development": {
       "type": "streamable-http",
       "url": "https://mcp-dev.edel-api.xyz/mcp",

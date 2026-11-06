@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Get your own Edel API key for the public MCP and store it without printing it.
 #
-# Usage: scripts/connect.sh <development|testnet> <claude|keychain> [scopes]
+# Usage: scripts/connect.sh <mainnet|testnet|development> <claude|keychain> [scopes]
 #
 #   claude    saves the key into the Claude Code plugin option (OS secure credential store).
 #   keychain  saves the key in the macOS login Keychain, service edel-mcp-<environment>.
@@ -19,10 +19,11 @@ target="${2:-}"
 scopes="${3:-read}"
 
 case "$env_name" in
-  development) api="https://dev.edel-api.xyz" ;;
+  mainnet) api="https://mainnet.edel-api.xyz" ;;
   testnet) api="https://testnet.edel-api.xyz" ;;
+  development) api="https://dev.edel-api.xyz" ;;
   *)
-    echo "usage: scripts/connect.sh <development|testnet> <claude|keychain> [scopes]" >&2
+    echo "usage: scripts/connect.sh <mainnet|testnet|development> <claude|keychain> [scopes]" >&2
     exit 2
     ;;
 esac

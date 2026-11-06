@@ -34,6 +34,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agent_models` | `GET /v1/agents/models` |
 | `edel_agent_money_estimates` | `GET /v1/agents/strategy-estimates` |
 | `edel_agent_orders` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/orders` |
+| `edel_agent_performance` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/performance` |
 | `edel_agent_pine` | `POST /v1/accounts/{accountId}/agents/pine` |
 | `edel_agent_positions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/positions` |
 | `edel_agent_rename` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/name` |
@@ -43,6 +44,8 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` |
 | `edel_agent_withdraw` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/returns` |
 | `edel_agents` | `GET /v1/accounts/{accountId}/agents` |
+| `edel_campaign_earnings` | `GET /v1/accounts/{accountId}/campaign-earnings` |
+| `edel_campaigns` | `GET /v1/accounts/{accountId}/campaigns` |
 | `edel_cancel_all_orders` | `POST /v2/orders/cancel-all` |
 | `edel_cancel_order` | `POST /v1/orders/{orderId}/cancel` |
 | `edel_cancel_order_batch` | `POST /v1/orders/batch/cancel` |
@@ -53,6 +56,10 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_deposit` | `POST /v1/accounts/{accountId}/deposits` |
 | `edel_deposit_confirm` | `POST /v1/accounts/{accountId}/deposits/confirm` |
 | `edel_faucet_grant` | `POST /v1/accounts/{accountId}/faucet-grant` |
+| `edel_fee_ladder` | `GET /v1/fee-tiers` |
+| `edel_fee_share_accept` | `POST /v1/accounts/{accountId}/fee-share-offers/{offerId}/accept` |
+| `edel_fee_share_offers` | `GET /v1/accounts/{accountId}/fee-share-offers` |
+| `edel_fee_tier` | `GET /v1/accounts/{accountId}/fee-tier` |
 | `edel_funding` | `GET /v1/accounts/{accountId}/positions/history` |
 | `edel_funding_intents` | `GET /v1/accounts/{accountId}/local-signing-funding-intents` |
 | `edel_kyc_status` | `GET /v1/accounts/{accountId}/kyc` |
@@ -73,6 +80,7 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_preview_order` | `POST /v1/orders/preview` |
 | `edel_price` | `GET /v1/markets/{marketId}/stats`, `GET /v1/markets/{marketId}/book` |
 | `edel_replace_order` | `POST /v1/orders/{orderId}/replace` |
+| `edel_squid_quote` | `POST /v1/accounts/{accountId}/squid-quote` |
 | `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` |
 | `edel_system_status` | `GET /v1/system/status` |
 | `edel_terms` | `GET /v1/accounts/{accountId}/terms` |

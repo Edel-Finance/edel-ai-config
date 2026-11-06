@@ -1,30 +1,31 @@
 #!/usr/bin/env bash
 # Smoke test for the Edel public MCP servers.
 #
-# Usage: scripts/smoke.sh [development] [testnet]   (default: both)
+# Usage: scripts/smoke.sh [mainnet] [testnet] [development]   (default: all three)
 #
 # Per environment it checks /ready, checks that /mcp refuses a request with no key, and, when the
 # key variable is set, lists the tools and calls the read-only tool edel_markets.
-# The key comes from the environment only (EDEL_MCP_KEY_DEVELOPMENT, EDEL_MCP_KEY_TESTNET). It
+# The key comes from the environment only (EDEL_MCP_KEY_MAINNET, EDEL_MCP_KEY_TESTNET,
+# EDEL_MCP_KEY_DEVELOPMENT). It
 # reaches curl on stdin, never on the command line, and is never printed. Output holds only
-# statuses, counts, booleans and the refusal reason.
+# statuses, counts, booleans, the refusal reason and the next tool.
 set +x
 set -euo pipefail
 
 endpoint() {
   case "$1" in
-    development) echo "https://mcp-dev.edel-api.xyz" ;;
+    mainnet) echo "https://mcp.edel-api.xyz" ;;
     testnet) echo "https://mcp-testnet.edel-api.xyz" ;;
-    production) echo "" ;;
+    development) echo "https://mcp-dev.edel-api.xyz" ;;
     *) echo "unknown environment: $1" >&2; exit 2 ;;
   esac
 }
 
 key_var() {
   case "$1" in
-    development) echo "EDEL_MCP_KEY_DEVELOPMENT" ;;
+    mainnet) echo "EDEL_MCP_KEY_MAINNET" ;;
     testnet) echo "EDEL_MCP_KEY_TESTNET" ;;
-    production) echo "EDEL_MCP_KEY_PRODUCTION" ;;
+    development) echo "EDEL_MCP_KEY_DEVELOPMENT" ;;
   esac
 }
 
@@ -66,10 +67,6 @@ smoke() {
   local env="$1" origin var key answer status payload
   origin=$(endpoint "$env")
   echo "== $env"
-  if [ -z "$origin" ]; then
-    echo "skipped: no public MCP for $env yet"
-    return
-  fi
   echo "origin: $origin/mcp"
   local file
   for file in \
@@ -90,7 +87,7 @@ smoke() {
   answer=$(rpc "$origin" "" '{"jsonrpc":"2.0","id":1,"method":"tools/list"}')
   status=$(safe_status "${answer##*$'\n'}")
   payload=${answer%$'\n'*}
-  echo "no key: HTTP $status reason=$(field reason "$payload")"
+  echo "no key: HTTP $status reason=$(field reason "$payload") nextTool=$(field nextTool "$payload")"
   [ "$status" = 401 ] || failures=$((failures + 1))
 
   var=$(key_var "$env")
@@ -131,7 +128,7 @@ smoke() {
 }
 
 envs=("$@")
-[ "${#envs[@]}" -gt 0 ] || envs=(development testnet)
+[ "${#envs[@]}" -gt 0 ] || envs=(mainnet testnet development)
 for env in "${envs[@]}"; do
   smoke "$env"
 done

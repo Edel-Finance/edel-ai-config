@@ -6,7 +6,7 @@
     {
       "name": "edel",
       "source": "./",
-      "description": "Edel PERPS public API skill plus the public Edel MCP for Development and TestNet, authenticated with your own API key."
+      "description": "Edel PERPS public API skill plus the public Edel MCP for MainNet, with Development and TestNet as test venues, authenticated with your own API key."
     }
   ]
 }

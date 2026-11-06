@@ -32,9 +32,12 @@ this table disagree, the docs page wins.
 
 | Venue | REST (and `/openapi.json`) | WebSocket | MCP |
 | --- | --- | --- | --- |
-| Testnet | `https://testnet.edel-api.xyz` | `wss://realtime-testnet.edel-api.xyz/streams/v1/ws` | `https://mcp-testnet.edel-api.xyz/mcp` |
-| Development | `https://dev.edel-api.xyz` | `wss://realtime-dev.edel-api.xyz/streams/v1/ws` | `https://mcp-dev.edel-api.xyz/mcp` |
-| Mainnet | Not published. | Not published. | Not published. |
+| MainNet (live, real funds) | `https://mainnet.edel-api.xyz` | `wss://realtime-mainnet.edel-api.xyz/streams/v1/ws` | `https://mcp.edel-api.xyz/mcp` |
+| TestNet (test venue) | `https://testnet.edel-api.xyz` | `wss://realtime-testnet.edel-api.xyz/streams/v1/ws` | `https://mcp-testnet.edel-api.xyz/mcp` |
+| Development (test venue) | `https://dev.edel-api.xyz` | `wss://realtime-dev.edel-api.xyz/streams/v1/ws` | `https://mcp-dev.edel-api.xyz/mcp` |
+
+MainNet moves real money. Use TestNet or Development to test a client. The MainNet trade app is
+<https://markets.edel.finance>.
 
 The docs say an MCP endpoint must be provisioned and verified by the venue's rollout. If an
 origin does not answer, report it. Do not guess another host.
@@ -44,7 +47,7 @@ origin does not answer, report it. Do not guess another host.
 This route is public and returns no secret, so a plain request is safe:
 
 ```sh
-curl --fail-with-body --silent "https://testnet.edel-api.xyz/v1/auth/capabilities"
+curl --fail-with-body --silent "https://mainnet.edel-api.xyz/v1/auth/capabilities"
 ```
 
 The response is `external-auth-capabilities/v1`. The field table in the
@@ -58,6 +61,10 @@ The response is `external-auth-capabilities/v1`. The field table in the
 > | `delegatedRegistration` | `product_identity_required` or `dfns_not_configured` | Username or email registration is not offered. |
 > | `emailOtp` | Always `email_otp_provider_required` | Email one-time codes are not offered. |
 > | `credentialRecovery` | Always `credential_recovery_not_configured` | Lost-passkey recovery is not offered. |
+
+The response also has `registrationSetupKey`. When it is `available`, sign-up registers a setup
+key in the owner's browser. That key can approve only the Party setup commands of the owner's own
+account (step 5). The `registrationSetupKey` description in the live contract is the source.
 
 Read this at the start of every session. Composition can change. Steps 1 and 2 cover the human
 session: a DFNS end-user bearer. An agent uses an owner-approved API key instead (step 2b). There
@@ -78,6 +85,9 @@ username; do not register again.
 4. `POST /v1/auth/register/complete` with the `temporaryAuthenticationToken`, the `Fido2`
    credential result, and a fresh Google token for the same subject. Success is
    `external-auth-register-complete/v1`.
+
+Each flow has one passkey prompt. Registration is Google sign-in plus one passkey. There is no
+passkey-only account.
 
 Registration creates the DFNS end-user credential, the delegated signing key and the Edel account
 mapping. It does not create a Canton Party binding. The `walletState` field in this response is
@@ -112,15 +122,19 @@ report({ status: 200, authenticated: true })
 
 Source: <https://docs.edel.finance/developers/accounts/for-agents> ("Connect with an API key").
 
-1. `POST /v1/agent-connect/start` with `clientName` and the smallest `scopes` the task needs.
-   `agents` and `funding` are opt-in; ask for them only when the owner wants them.
-2. Show the owner `verificationUrl` and `userCode`. **Human:** the owner approves with a passkey.
+1. `POST /v1/agent-connect/start` with `clientName` and the smallest `scopes` the task needs. The
+   scopes are `read`, `trade`, and the opt-in `agents` and `funding`. Ask for an opt-in scope only
+   when the owner wants it.
+2. Show the owner `verificationUrl` and `userCode`. `verificationUrl` opens the `/connect-agent`
+   page of the trade app of the same venue (on MainNet, <https://markets.edel.finance>).
+   **Human:** the owner checks the code and approves with one passkey.
 3. Poll `POST /v1/agent-connect/complete` with `connectCode` every `intervalSeconds`, as the
    docs page says. It returns `apiKey` exactly once.
 4. Send `Authorization: Bearer <apiKey>`. Keep the key in a file only you can read. For MCP, put
    the same header on every request.
 
-`GET /v1/api-keys/current` confirms the key's scopes and expiry. A key never signs, never changes
+A key expires in 24 hours by default and in 7 days at most. `GET /v1/api-keys/current` confirms the
+key's scopes and expiry. A key never signs, never changes
 the Party binding and never approves another agent. Only the owner lists or revokes keys.
 
 ## Passkeys belong to one venue
@@ -135,6 +149,15 @@ owner's whole profile; a section it cannot read is null and named in `unavailabl
   passkey can approve a new one. Tell the owner to contact support. Do not retry login.
 - Adding and naming a passkey is the owner's, in the browser (Settings, Profile). A key never
   reaches that route. There is no rename, no removal route yet and no last-used time.
+
+## Money units and margin
+
+- Read `settlementAsset` and `settlementAssetDecimals` from `GET /v1/markets`. Never hard code the
+  decimals. Today USD.E (Development) and USDCx (TestNet, MainNet) both have 10 decimals.
+- Every money value is an integer string of atoms: 10^-`settlementAssetDecimals` units of the
+  settlement asset. Never do float math on it.
+- `marginMode` on the account snapshot is always `cross`. Quote its description in the live
+  contract; do not offer isolated margin.
 
 ## Step 3: learn the account id
 
@@ -191,7 +214,13 @@ User Action that the owner approves with the passkey.
    active account returns its binding with no new challenges. No `Idempotency-Key` is needed.
 2. **Human:** approve every challenge in the browser, in order.
 3. `POST /v1/accounts/{accountId}/party/complete` with the signed proofs.
-4. `GET /v1/accounts/{accountId}/party` again. Continue only when `status` is `active`.
+4. **Human:** when the venue asks for it, `POST /v1/accounts/{accountId}/party/consent` does the
+   nonfinancial Party setup:
+   account acceptance, receiver consent and, where the venue offers the bridge, the bridge
+   agreement request. Each command needs one owner signature, with the passkey or with the setup
+   key from sign-up. The setup key approves only these Party setup commands of the owner's own
+   account. A key never reaches this route.
+5. `GET /v1/accounts/{accountId}/party` again. Continue only when `status` is `active`.
 
 There is no Party selector and no caller-supplied Party id. There is no route that binds a Party
 before login; the binding requires the bearer from step 2.
