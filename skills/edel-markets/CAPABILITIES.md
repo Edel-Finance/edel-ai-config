@@ -249,6 +249,8 @@ Two fields that a client must not miss, quoted from the AsyncAPI field descripti
 
 - `initialMarginAtoms` on [account.margin](https://docs.edel.finance/developers/realtime/account-margin):
   "Account-wide initial margin in settlement-asset atoms [...] Absent from legacy producers."
-- The stored order attributes `orderType`, `postOnly`, `reduceOnly` and `timeInForce` on
-  [account.orders](https://docs.edel.finance/developers/realtime/account-orders): "Present on every
-  order lifecycle frame when stored".
+- The stored order attributes on
+  [account.orders](https://docs.edel.finance/developers/realtime/account-orders): `orderType`,
+  `postOnly` and `reduceOnly` are "Present on every order lifecycle frame when stored", and
+  `timeInForce` is the "Accepted stored time in force on placement, cancellation, replacement and
+  fill-state updates".
