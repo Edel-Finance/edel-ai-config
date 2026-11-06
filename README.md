@@ -10,31 +10,35 @@ endpoints, authenticated with your own API key only. Never use another person's 
 
 | Server | Environment | URL | Environment variable |
 | --- | --- | --- | --- |
-| `edel-development` | Development | `https://mcp-dev.edel-api.xyz/mcp` | `EDEL_MCP_KEY_DEVELOPMENT` |
-| `edel-testnet` | TestNet | `https://mcp-testnet.edel-api.xyz/mcp` | `EDEL_MCP_KEY_TESTNET` |
-| `edel-production` | Production | Disabled placeholder (no public MCP yet) | none |
+| `edel-mainnet` | MainNet (live, real funds) | `https://mcp.edel-api.xyz/mcp` | `EDEL_MCP_KEY_MAINNET` |
+| `edel-testnet` | TestNet (test venue) | `https://mcp-testnet.edel-api.xyz/mcp` | `EDEL_MCP_KEY_TESTNET` |
+| `edel-development` | Development (test venue) | `https://mcp-dev.edel-api.xyz/mcp` | `EDEL_MCP_KEY_DEVELOPMENT` |
 
-Approve a key in your browser and store it in the macOS login Keychain with `scripts/connect.sh`
-(see [mcp/README.md](mcp/README.md)), then export `EDEL_MCP_KEY_TESTNET` or
-`EDEL_MCP_KEY_DEVELOPMENT` in your shell profile before starting your agent client.
+Each server needs its own key, approved on that venue. Approve a key in your browser and store it
+in the macOS login Keychain with `scripts/connect.sh` (see [mcp/README.md](mcp/README.md)), then
+export `EDEL_MCP_KEY_MAINNET`, `EDEL_MCP_KEY_TESTNET` or `EDEL_MCP_KEY_DEVELOPMENT` in your shell
+profile before starting your agent client. Test a new client on TestNet or Development first.
 
 ## Platform status
 
 Each package was installed into a throwaway home or config folder, never the global config. Every
 MCP package reaches the public MCP and gets the documented `401` with `nextTool: edel_connect`
-until you approve your own key. A public read (`GET /v1/markets` on Development) returned 15
-markets. Status: tested means installed and run with the real CLI; structure-checked means checked
-against the platform's published format because its CLI is not on the test machine.
+until you approve your own key. On 2026-11-06 a public read (`GET /v1/markets`) returned 13 markets
+on MainNet, 14 on TestNet and 16 on Development. Status: tested means installed and run with the
+real CLI; structure-checked means checked against the platform's published format because its CLI
+is not on the test machine. The `edel-mainnet` server was added on 2026-11-06 with the same URL and
+header shape as the test venues. `scripts/smoke.sh mainnet` gets the documented `401`; the
+per-platform runs in this table were made before that.
 
 | Platform | Install | What it can do | MCP tool call | Status | Format doc |
 | --- | --- | --- | --- | --- | --- |
-| Claude Code | `claude plugin install edel@edel-ai-config` | Skill plus Development and TestNet MCP | Reaches server, needs `edel_connect` key | tested | <https://code.claude.com/docs/en/plugins-reference> |
-| Codex | `codex plugin add edel@edel-ai-config` | Skill plus Development and TestNet MCP | Reaches server, needs `edel_connect` key | tested | <https://developers.openai.com/codex/plugins> |
-| Grok | `grok plugin install Edel-Finance/edel-ai-config --trust` | Skill plus Development and TestNet MCP | Reaches server, needs `edel_connect` key | tested | `grok plugin --help` |
-| Antigravity | `agy plugin install .` | Skill plus Development and TestNet MCP | Reaches server, needs `edel_connect` key | tested | `agy plugin validate --help` |
-| Hermes | `hermes plugins install Edel-Finance/edel-ai-config --enable` | Skill; MCP added with `hermes mcp add` | Reaches server, needs `edel_connect` key | tested | <https://agent-plugins.org> |
-| Cursor | `cursor-agent --plugin-dir <clone>`, or a team marketplace | Skill plus Development and TestNet MCP | Same URL and header, not run | structure-checked | <https://cursor.com/docs/plugins/building> |
-| Gemini CLI | `gemini extensions install https://github.com/Edel-Finance/edel-ai-config` | Skill plus Development and TestNet MCP | Same URL and header, not run | structure-checked | <https://geminicli.com/docs/extensions/reference/> |
+| Claude Code | `claude plugin install edel@edel-ai-config` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | <https://code.claude.com/docs/en/plugins-reference> |
+| Codex | `codex plugin add edel@edel-ai-config` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | <https://developers.openai.com/codex/plugins> |
+| Grok | `grok plugin install Edel-Finance/edel-ai-config --trust` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | `grok plugin --help` |
+| Antigravity | `agy plugin install .` | Skill plus MainNet, TestNet and Development MCP | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | `agy plugin validate --help` |
+| Hermes | `hermes plugins install Edel-Finance/edel-ai-config --enable` | Skill; MCP added with `hermes mcp add` | Reaches server, needs `edel_connect` key | tested on Development and TestNet; MainNet not run | <https://agent-plugins.org> |
+| Cursor | `cursor-agent --plugin-dir <clone>`, or a team marketplace | Skill plus MainNet, TestNet and Development MCP | Same URL and header, not run | structure-checked | <https://cursor.com/docs/plugins/building> |
+| Gemini CLI | `gemini extensions install https://github.com/Edel-Finance/edel-ai-config` | Skill plus MainNet, TestNet and Development MCP | Same URL and header, not run | structure-checked | <https://geminicli.com/docs/extensions/reference/> |
 | Pi | `pi install git:github.com/Edel-Finance/edel-ai-config` | Skill only (Pi has no MCP); REST through the skill | Not applicable | structure-checked | <https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/packages.md> |
 | OpenClaw | `openclaw skills install git:Edel-Finance/edel-ai-config` | Skill; MCP from `mcp/servers.json` | Same URL and header, not run | structure-checked | <https://docs.openclaw.ai> |
 | ChatGPT custom GPT | Paste [chatgpt/](chatgpt/README.md) files into a GPT | Public read-only market data, no trading | Not applicable (REST Actions) | structure-checked; every action route answered on TestNet | <https://help.openai.com/en/articles/9442513> |
@@ -55,6 +59,7 @@ against the platform's published format because its CLI is not on the test machi
    store:
 
    ```sh
+   scripts/connect.sh mainnet claude
    scripts/connect.sh testnet claude
    scripts/connect.sh development claude
    ```
@@ -74,8 +79,8 @@ against the platform's published format because its CLI is not on the test machi
    codex plugin add edel@edel-ai-config
    ```
 
-2. Export `EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) from your secret store before
-   starting Codex.
+2. Export `EDEL_MCP_KEY_MAINNET`, `EDEL_MCP_KEY_TESTNET` or `EDEL_MCP_KEY_DEVELOPMENT` from your
+   secret store before starting Codex.
 
 3. Verify the installed plugin and MCP servers:
 
@@ -93,8 +98,8 @@ against the platform's published format because its CLI is not on the test machi
    agy plugin install .
    ```
 
-2. Export `EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) from your secret store before
-   starting Antigravity.
+2. Export `EDEL_MCP_KEY_MAINNET`, `EDEL_MCP_KEY_TESTNET` or `EDEL_MCP_KEY_DEVELOPMENT` from your
+   secret store before starting Antigravity.
 
 3. Verify the installed plugin, skill and MCP servers:
 
@@ -119,8 +124,8 @@ against the platform's published format because its CLI is not on the test machi
    grok plugin enable edel
    ```
 
-2. Export `EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) from your secret store before
-   starting Grok.
+2. Export `EDEL_MCP_KEY_MAINNET`, `EDEL_MCP_KEY_TESTNET` or `EDEL_MCP_KEY_DEVELOPMENT` from your
+   secret store before starting Grok.
 
 3. Verify the installed plugin and MCP servers:
 
@@ -138,14 +143,15 @@ against the platform's published format because its CLI is not on the test machi
    hermes plugins install Edel-Finance/edel-ai-config --enable
    ```
 
-2. Add the TestNet MCP server. Hermes prompts for your key and saves it to its private secret
+2. Add the MainNet MCP server. Hermes prompts for your key and saves it to its private secret
    store; the key never appears on the command line:
 
    ```sh
-   hermes mcp add edel-testnet --url https://mcp-testnet.edel-api.xyz/mcp --auth header
+   hermes mcp add edel-mainnet --url https://mcp.edel-api.xyz/mcp --auth header
    ```
 
-   Use `edel-development` and `https://mcp-dev.edel-api.xyz/mcp` instead for Development.
+   Use `edel-testnet` and `https://mcp-testnet.edel-api.xyz/mcp` for TestNet, or
+   `edel-development` and `https://mcp-dev.edel-api.xyz/mcp` for Development.
 
 3. Verify the installed skill and MCP server:
 
@@ -168,11 +174,11 @@ MCP entries from [mcp/servers.json](mcp/servers.json) to your OpenClaw MCP confi
 
 ### Cursor
 
-`.cursor-plugin/plugin.json` carries the skill and both MCP servers. The plugin is not in the
+`.cursor-plugin/plugin.json` carries the skill and the three MCP servers. The plugin is not in the
 Cursor Marketplace yet. Add this repository as a team marketplace, or load a clone with
 `cursor-agent --plugin-dir <clone>`. Set
-`EDEL_MCP_KEY_TESTNET` (or `EDEL_MCP_KEY_DEVELOPMENT`) as a plugin variable under Plugins, then
-Configure. Never commit a key.
+`EDEL_MCP_KEY_MAINNET`, `EDEL_MCP_KEY_TESTNET` or `EDEL_MCP_KEY_DEVELOPMENT` as a plugin variable
+under Plugins, then Configure. Never commit a key.
 
 ### Gemini CLI
 
@@ -180,7 +186,7 @@ Configure. Never commit a key.
 gemini extensions install https://github.com/Edel-Finance/edel-ai-config
 ```
 
-The install asks for your TestNet and Development keys and keeps them in the extension's own
+The install asks for your MainNet, TestNet and Development keys and keeps them in the extension's own
 settings, marked sensitive. Leave one empty to skip that environment. Verify with
 `gemini extensions list` and `/mcp` inside Gemini CLI.
 
@@ -205,7 +211,7 @@ npx skills add Edel-Finance/edel-ai-config --skill edel-markets
 ```
 
 This adds one skill, `edel-markets`, to your agent. It covers every public Edel PERPS capability:
-REST, CCXT `/v2`, WebSockets, MCP tools, paper strategy agents, deposits and withdrawals. The skill
+REST, CCXT `/v2`, WebSockets, MCP tools, strategy agents, deposits and withdrawals. The skill
 reads `skills/edel-markets/AUTH.md` before any private call and finds each capability in
 `skills/edel-markets/CAPABILITIES.md`.
 
@@ -215,7 +221,7 @@ reads `skills/edel-markets/AUTH.md` before any private call and finds each capab
 an environment variable or the macOS Keychain. It also has the smoke test:
 
 ```sh
-scripts/smoke.sh development testnet
+scripts/smoke.sh mainnet testnet development
 ```
 
 `scripts/check.sh` tests both scripts offline with a fake `curl`. It needs no key and no network.
@@ -253,4 +259,4 @@ facts from memory.
 - This repo carries no SDK, MCP server, dependencies or copied contracts. See
   [AGENTS.md](AGENTS.md).
 
-License: not selected yet.
+License: MIT. See [LICENSE](LICENSE).

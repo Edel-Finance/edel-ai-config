@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "edel",
-  "version": "1.1.0",
-  "description": "Public skills and MCP client configuration for the Edel PERPS API.",
+  "version": "1.2.0",
+  "description": "Public skills and MCP client configuration for the Edel PERPS API on MainNet, TestNet and Development.",
   "author": {
     "name": "Edel Finance"
   },

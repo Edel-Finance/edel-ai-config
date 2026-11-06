@@ -1,7 +1,7 @@
 {
   "name": "edel",
-  "version": "1.1.0",
-  "description": "Edel PERPS public API skill plus the public Edel MCP for Development and TestNet, authenticated with your own API key.",
+  "version": "1.2.0",
+  "description": "Edel PERPS public API skill plus the public Edel MCP for MainNet, with Development and TestNet as test venues, authenticated with your own API key.",
   "author": { "name": "Edel Finance" },
   "homepage": "https://docs.edel.finance/developers/accounts/for-agents",
   "repository": "https://github.com/Edel-Finance/edel-ai-config",
@@ -11,6 +11,10 @@
   "variables": {
     "type": "object",
     "properties": {
+      "EDEL_MCP_KEY_MAINNET": {
+        "type": "string",
+        "description": "Your own Edel API key for MainNet, approved with your passkey."
+      },
       "EDEL_MCP_KEY_DEVELOPMENT": {
         "type": "string",
         "description": "Your own Edel API key for Development, approved with your passkey."
@@ -22,6 +26,10 @@
     }
   },
   "mcpServers": {
+    "edel-mainnet": {
+      "url": "https://mcp.edel-api.xyz/mcp",
+      "headers": { "Authorization": "Bearer ${EDEL_MCP_KEY_MAINNET}" }
+    },
     "edel-development": {
       "url": "https://mcp-dev.edel-api.xyz/mcp",
       "headers": { "Authorization": "Bearer ${EDEL_MCP_KEY_DEVELOPMENT}" }

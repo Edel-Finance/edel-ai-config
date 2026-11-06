@@ -8,7 +8,7 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
 ## Scope
 
 - Keep the owner-selected engineering review skill and provenance at `.agents/skills/code-review/`; it is repository policy, not a distributed public trading capability.
-- Keep it small: `README.md`, `AGENTS.md`, `CODING_STANDARDS.md`, `GLOSSARY.md`, `.gitignore`, the skill setup notes in `docs/agents/`, `skills/<name>/SKILL.md` with its local
+- Keep it small: `README.md`, `AGENTS.md`, `CODING_STANDARDS.md`, `GLOSSARY.md`, `LICENSE`, `.gitignore`, the skill setup notes in `docs/agents/`, `skills/<name>/SKILL.md` with its local
   references, the plugin and skill manifests for Claude Code (`.claude-plugin/`), Codex
   (`.codex-plugin/`, `.agents/plugins/`, `skills/.codex-plugin/`), Grok (`.grok-plugin/`,
   `skills/plugin.json`, `skills/.mcp.json`), Antigravity (`plugin.json`, `mcp_config.json`),
@@ -31,8 +31,9 @@ Read [Coding standards](CODING_STANDARDS.md) for review judgments. The safety ru
   `TOOLS.md` by hand.
 - No application code, SDK, MCP server, package manifest, lockfile or dependency. The helpers use
   only `bash`, `curl` and the OS credential tool.
-- MCP configs point only at the public MCP URL of each environment, as published in the public
-  docs. Production stays a disabled placeholder until its MCP is public.
+- MCP configs point only at the public MCP URL of each environment: MainNet
+  (`https://mcp.edel-api.xyz/mcp`), TestNet and Development. Each server has its own key variable.
+  MainNet moves real funds; TestNet and Development stay the test venues.
 - MCP auth uses the user's own API key from the OS secure store or an environment variable. Never a
   key in a repo file or on a command line, and never another person's browser session.
 - No copied OpenAPI, AsyncAPI, Postman or realtime contract files. Link to the live docs and the

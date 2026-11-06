@@ -32,7 +32,8 @@ case "$FAKE_CASE:$url" in
   interval:*/v1/agent-connect/start) printf '{%s,"intervalSeconds":"PATH[$(touch %s)]","expiresInSeconds":5}\n201' "$start" "$FAKE_MARKER" ;;
   expires:*/v1/agent-connect/start) printf '{%s,"intervalSeconds":1,"expiresInSeconds":"PATH[$(touch %s)]"}\n201' "$start" "$FAKE_MARKER" ;;
   missing:*/v1/agent-connect/start) printf '{"verificationUrl":"https://dev.example/connect","userCode":"ABCD-1234","intervalSeconds":1,"expiresInSeconds":5}\n201' ;;
-  notools:*/ready) printf '{"status":"ok"}' ;;
+  notools:*/ready | nokey:*/ready) printf '{"status":"ok"}' ;;
+  nokey:https://mcp.edel-api.xyz/mcp) printf '{"reason":"unauthorized","nextTool":"edel_connect"}\n401' ;;
   notools:*/mcp)
     case "$data" in
       *initialize*) printf '{"result":{}}\n200' ;;
@@ -69,6 +70,17 @@ expect_refused "missing connectCode is named" "has no connectCode field" \
   env FAKE_CASE=missing bash "$root/scripts/connect.sh" development claude
 expect_refused "missing tool names are named" "no result.tools[].name field" \
   env FAKE_CASE=notools EDEL_MCP_KEY_DEVELOPMENT=fake bash "$root/scripts/smoke.sh" development
+
+out=$(PATH="$work/bin:$PATH" FAKE_CASE=nokey EDEL_MCP_KEY_MAINNET='' bash "$root/scripts/smoke.sh" mainnet 2>&1) || true
+if [[ $out == *"no key: HTTP 401 reason=unauthorized nextTool=edel_connect"* ]] && [[ $out != *"config drift"* ]]; then
+  echo "ok: mainnet smoke reads the MainNet MCP and reports nextTool"
+else
+  echo "FAIL: mainnet smoke"
+  printf '%s\n' "$out" | sed 's/^/  /'
+  failures=$((failures + 1))
+fi
+expect_refused "mainnet is an accepted connect environment" "has no connectCode field" \
+  env FAKE_CASE=missing bash "$root/scripts/connect.sh" mainnet claude
 
 capture="$work/scopes.json"
 PATH="$work/bin:$PATH" FAKE_CASE=missing FAKE_CAPTURE="$capture" bash "$root/scripts/connect.sh" development claude read,trade >/dev/null 2>&1 || true
