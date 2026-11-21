@@ -46,28 +46,50 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_agents` | `GET /v1/accounts/{accountId}/agents` |
 | `edel_campaign_earnings` | `GET /v1/accounts/{accountId}/campaign-earnings` |
 | `edel_campaigns` | `GET /v1/accounts/{accountId}/campaigns` |
-| `edel_cancel_all_orders` | `POST /v2/orders/cancel-all` |
+| `edel_cancel_all_orders` | `POST /v2/spot/orders/cancel-all`, `POST /v2/perps/orders/cancel-all` |
 | `edel_cancel_order` | `POST /v1/orders/{orderId}/cancel` |
 | `edel_cancel_order_batch` | `POST /v1/orders/batch/cancel` |
+| `edel_cancel_spot_order` | `POST /v2/spot/orders/{orderId}/cancel`, `POST /v2/perps/orders/{orderId}/cancel` |
 | `edel_candidate_markets` | `GET /v1/market-data/candidate-markets` |
 | `edel_candles` | `GET /v1/markets/{marketId}/candles` |
 | `edel_close_position` | `GET /v1/accounts/{accountId}/positions`, `POST /v1/orders` |
 | `edel_connect` | `POST /v1/agent-connect/start`, `POST /v1/agent-connect/complete`, `GET /v1/api-keys/current` |
+| `edel_create_listing_request` | `POST /v2/accounts/{accountId}/listing-requests` |
+| `edel_create_order` | `POST /v2/spot/order`, `POST /v2/perps/order` |
+| `edel_create_twap_order` | `POST /v2/spot/twap-orders` |
 | `edel_deposit` | `POST /v1/accounts/{accountId}/deposits` |
 | `edel_deposit_capabilities` | `GET /v2/accounts/{accountId}/deposit-capabilities` |
 | `edel_deposit_confirm` | `POST /v1/accounts/{accountId}/deposits/confirm` |
+| `edel_edit_order` | `POST /v2/spot/orders/{orderId}/edit`, `POST /v2/perps/orders/{orderId}/edit` |
+| `edel_edit_orders` | `POST /v2/spot/orders/edit`, `POST /v2/perps/orders/edit` |
 | `edel_faucet_grant` | `POST /v1/accounts/{accountId}/faucet-grant` |
 | `edel_fee_ladder` | `GET /v1/fee-tiers` |
 | `edel_fee_share_accept` | `POST /v1/accounts/{accountId}/fee-share-offers/{offerId}/accept` |
 | `edel_fee_share_offers` | `GET /v1/accounts/{accountId}/fee-share-offers` |
 | `edel_fee_tier` | `GET /v1/accounts/{accountId}/fee-tier` |
+| `edel_fetch_balance` | `GET /v2/accounts/{accountId}` |
+| `edel_fetch_currencies` | `GET /v2/currencies` |
+| `edel_fetch_markets` | `GET /v2/spot/markets`, `GET /v2/perps/markets` |
+| `edel_fetch_my_trades` | `GET /v2/spot/accounts/{accountId}/fills`, `GET /v2/perps/accounts/{accountId}/fills` |
+| `edel_fetch_ohlcv` | `GET /v2/spot/markets/{symbol}/candles`, `GET /v2/perps/markets/{symbol}/candles` |
+| `edel_fetch_open_orders` | `GET /v2/spot/accounts/{accountId}/orders/open`, `GET /v2/perps/accounts/{accountId}/orders/open` |
+| `edel_fetch_order` | `GET /v2/spot/orders/{orderId}`, `GET /v2/perps/orders/{orderId}` |
+| `edel_fetch_order_book` | `GET /v2/spot/markets/{symbol}/book`, `GET /v2/perps/markets/{symbol}/book` |
+| `edel_fetch_orders` | `GET /v2/spot/accounts/{accountId}/orders`, `GET /v2/perps/accounts/{accountId}/orders` |
+| `edel_fetch_ticker` | `GET /v2/spot/markets/{symbol}/stats`, `GET /v2/perps/markets/{symbol}/stats` |
+| `edel_fetch_tickers` | `GET /v2/spot/tickers`, `GET /v2/perps/tickers` |
+| `edel_fetch_trades` | `GET /v2/spot/markets/{symbol}/trades`, `GET /v2/perps/markets/{symbol}/trades` |
+| `edel_fetch_trading_fees` | `GET /v2/spot/trading-fees`, `GET /v2/perps/trading-fees` |
 | `edel_funding` | `GET /v1/accounts/{accountId}/positions/history` |
 | `edel_funding_intents` | `GET /v1/accounts/{accountId}/local-signing-funding-intents` |
 | `edel_kyc_status` | `GET /v1/accounts/{accountId}/kyc` |
 | `edel_leaderboard` | `GET /v1/leaderboard` |
+| `edel_listing_request_deposit` | `GET /v2/accounts/{accountId}/listing-requests/{requestId}/deposit` |
+| `edel_listing_request_deposit_confirm` | `POST /v2/accounts/{accountId}/listing-requests/{requestId}/deposit/confirm` |
+| `edel_listing_requests` | `GET /v2/accounts/{accountId}/listing-requests` |
 | `edel_market` | `GET /v1/markets/{marketId}` |
-| `edel_market_tickers` | `GET /v2/tickers` |
-| `edel_market_trades` | `GET /v2/markets/{symbol}/trades` |
+| `edel_market_tickers` | `GET /v2/spot/tickers`, `GET /v2/perps/tickers` |
+| `edel_market_trades` | `GET /v2/spot/markets/{symbol}/trades`, `GET /v2/perps/markets/{symbol}/trades` |
 | `edel_markets` | `GET /v1/markets` |
 | `edel_me` | `GET /v1/me` |
 | `edel_order` | `GET /v1/orders/{orderId}` |
@@ -76,10 +98,12 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | `edel_passkeys` | `GET /v1/accounts/{accountId}/passkeys` |
 | `edel_place_order` | `POST /v1/orders` |
 | `edel_place_order_batch` | `POST /v1/orders/batch` |
+| `edel_portfolio_history` | `GET /v1/accounts/{accountId}/portfolio/history` |
 | `edel_position_history` | `GET /v1/accounts/{accountId}/positions/history` |
 | `edel_positions` | `GET /v1/accounts/{accountId}/positions` |
 | `edel_preview_order` | `POST /v1/orders/preview` |
 | `edel_price` | `GET /v1/markets/{marketId}/stats`, `GET /v1/markets/{marketId}/book` |
+| `edel_referral_code_status` | `GET /v1/affiliate/referral-codes/{code}` |
 | `edel_replace_order` | `POST /v1/orders/{orderId}/replace` |
 | `edel_squid_quote` | `POST /v1/accounts/{accountId}/squid-quote` |
 | `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` |
