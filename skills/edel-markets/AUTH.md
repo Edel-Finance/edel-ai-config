@@ -1,4 +1,4 @@
-# Edel PERPS authentication and secure setup prerequisite
+# Edel authentication and secure setup prerequisite
 
 Do these steps in order. Every private route and account channel needs a verified DFNS end user.
 Trading also needs an `active` Canton Party binding. Steps marked **human** need a person in a
@@ -47,11 +47,11 @@ origin does not answer, report it. Do not guess another host.
 This route is public and returns no secret, so a plain request is safe:
 
 ```sh
-curl --fail-with-body --silent "https://mainnet.edel-api.xyz/v1/auth/capabilities"
+curl --fail-with-body --silent "https://mainnet.edel-api.xyz/v2/auth/capabilities"
 ```
 
-The response is `external-auth-capabilities/v1`. The field table in the
-[introduction](https://docs.edel.finance/developers/introduction) is the source; quoted here:
+The field table in the [introduction](https://docs.edel.finance/developers/introduction) is the
+source; quoted here:
 
 > | Field | Values | What your client does |
 > | --- | --- | --- |
@@ -78,13 +78,12 @@ username; do not register again.
 **Create (human).** Only when `socialRegistrationProviders` lists a provider (today only `google`):
 
 1. Generate one opaque `Idempotency-Key` and keep it for the whole attempt. This route requires it.
-2. `POST /v1/auth/social/register` with header `Idempotency-Key` and body `{"idToken": "<Google
-   OIDC ID token>"}`. The response is `external-auth-register-init/v1` with a WebAuthn creation
-   challenge and a `temporaryAuthenticationToken`.
+2. `POST /v2/auth/social/register` with header `Idempotency-Key` and body `{"idToken": "<Google
+   OIDC ID token>"}`. The response returns a WebAuthn creation challenge and a
+   `temporaryAuthenticationToken`.
 3. **Human:** the browser runs `navigator.credentials.create()` with that challenge.
-4. `POST /v1/auth/register/complete` with the `temporaryAuthenticationToken`, the `Fido2`
-   credential result, and a fresh Google token for the same subject. Success is
-   `external-auth-register-complete/v1`.
+4. `POST /v2/auth/register/complete` with the `temporaryAuthenticationToken`, the `Fido2`
+   credential result, and a fresh Google token for the same subject.
 
 Registration is a Google sign-in plus one passkey (steps 2 to 4 above). There is no passkey-only
 registration; `delegatedRegistration` in step 0 says so.
@@ -93,24 +92,24 @@ Registration creates the DFNS end-user credential, the delegated signing key and
 mapping. It does not create a Canton Party binding. The `walletState` field in this response is
 legacy and proves nothing about the binding.
 
-If a registration result is ambiguous, do not repeat it. `POST /v1/auth/social/register/recover`
+If a registration result is ambiguous, do not repeat it. `POST /v2/auth/social/register/recover`
 with the same `Idempotency-Key` and a fresh Google token resolves it.
 
 ## Step 2: authenticate (human)
 
 Passkey login, when `passkeyLogin` is `available`:
 
-1. `POST /v1/auth/login/init` with `{"username": "<registered DFNS username>"}`. The response is
-   `external-auth-login-init/v1` with `challenge`, `challengeIdentifier` and `allowCredentials`.
+1. `POST /v2/auth/login/init` with `{"username": "<registered DFNS username>"}`. The response
+   returns `challenge`, `challengeIdentifier` and `allowCredentials`.
 2. **Human:** the browser runs `navigator.credentials.get()` with that challenge.
-3. `POST /v1/auth/login/complete` with `challengeIdentifier` and a `firstFactor` of kind `Fido2`
+3. `POST /v2/auth/login/complete` with `challengeIdentifier` and a `firstFactor` of kind `Fido2`
    carrying the assertion.
 
-Google login, when `socialLoginProviders` lists `google`: `POST /v1/auth/social/login` with
+Google login, when `socialLoginProviders` lists `google`: `POST /v2/auth/social/login` with
 `{"idToken": "<Google OIDC ID token>"}`.
 
-Both return `external-auth-login/v1` with `token`. That token is the DFNS end-user bearer. Send it
-as `Authorization: Bearer <token>` on private REST routes only. Ignore `walletState` here too.
+Both return `token`. That token is the DFNS end-user bearer. Send it as
+`Authorization: Bearer <token>` on private REST routes only. Ignore `walletState` here too.
 
 ```text
 // pseudocode, in memory only
@@ -122,13 +121,13 @@ report({ status: 200, authenticated: true })
 
 Source: <https://docs.edel.finance/developers/accounts/for-agents> ("Connect with an API key").
 
-1. `POST /v1/agent-connect/start` with `clientName` and the smallest `scopes` the task needs. The
+1. `POST /v2/agent-connect/start` with `clientName` and the smallest `scopes` the task needs. The
    scopes are `read`, `trade`, and the opt-in `agents` and `funding`. Ask for an opt-in scope only
    when the owner wants it.
 2. Show the owner `verificationUrl` and `userCode`. `verificationUrl` opens the `/connect-agent`
    page of the trade app of the same venue (on MainNet, <https://markets.edel.finance>).
    **Human:** the owner checks the code and approves with one passkey.
-3. Poll `POST /v1/agent-connect/complete` with `connectCode` every `intervalSeconds`, as the
+3. Poll `POST /v2/agent-connect/complete` with `connectCode` every `intervalSeconds`, as the
    docs page says. It returns `apiKey` exactly once.
 4. Send `Authorization: Bearer <apiKey>`. Keep the key in a file only you can read. For MCP, put
    the same header on every request.
@@ -138,15 +137,15 @@ For expiry, the "What a key can do" section of
 
 > A key expires (24 hours by default, 7 days at most) and the owner can revoke it.
 
-`GET /v1/api-keys/current` confirms the key's scopes and expiry. A key never signs, never changes
+`GET /v2/api-keys/current` confirms the key's scopes and expiry. A key never signs, never changes
 the Party binding and never approves another agent. Only the owner lists or revokes keys.
 
 ## Passkeys belong to one venue
 
-Each venue has its own passkey relying party. A passkey made on Testnet never signs on
+Each venue has its own passkey relying party. A passkey made on TestNet never signs on
 Development, and one made on a retired address signs nowhere. Read them with `edel_passkeys` (or
-`GET /v1/accounts/{accountId}/passkeys`): each has a `status` of `usable_here`,
-`other_relying_party` or `inactive`. `edel_me` (`GET /v1/me`) returns the same list inside the
+`GET /v2/accounts/{accountId}/passkeys`): each has a `status` of `usable_here`,
+`other_relying_party` or `inactive`. `edel_me` (`GET /v2/me`) returns the same list inside the
 owner's whole profile; a section it cannot read is null and named in `unavailable`.
 
 - No `usable_here` passkey: the owner cannot sign in or approve anything in this venue, and no
@@ -156,15 +155,15 @@ owner's whole profile; a section it cannot read is null and named in `unavailabl
 
 ## Money units and margin
 
-- Read `settlementAsset` and `settlementAssetDecimals` from `GET /v1/markets` of your venue every
-  session. Never hard code the decimals. The live contract describes the field:
+- Read `settlementAsset` and `settlementAssetDecimals` from `GET /v2/markets` (or
+  `GET /v2/spot/markets` and `GET /v2/perps/markets`) of your venue every session. Never hard code
+  the decimals. The live contract describes the field:
 
   > Decimal places of settlementAsset: every collateral amount (balances, margin, PnL, fees,
   > deposits, withdrawals) is an integer count of 10^-settlementAssetDecimals units of it.
 
-  An example, not a rule: on 2026-11-06 `GET /v1/markets` answered USD.E on Development and USDCx
-  on TestNet and MainNet, all with 10 decimals.
-- Money values are atom strings. Never do float math on them.
+- Money values are atom strings on native fields and CCXT decimal values on CCXT fields. Never do
+  float math on atom strings.
 - The live contract describes `marginMode` on the account snapshot as "Always cross: margin is held
   per account across all positions and orders." Do not offer isolated margin.
 
@@ -172,15 +171,15 @@ owner's whole profile; a section it cannot read is null and named in `unavailabl
 
 ```text
 // pseudocode, in memory only
-res = fetch(origin + "/v1/realtime/ticket", { method: "POST",
+res = fetch(origin + "/v2/realtime/ticket", { method: "POST",
         headers: { Authorization: "Bearer " + session.bearer } })
 session.accountId = res.body.accountId     // keep; never guess an account id
 session.ticket    = res.body.ticket        // WebSocket only; expires at res.body.expiresAt
 report({ status: res.status, accountIdKnown: session.accountId != null })
 ```
 
-Rotate the ticket with `PUT /v1/realtime/ticket` and revoke the family with
-`DELETE /v1/realtime/ticket`. Neither takes the bearer; the ticket is the credential.
+Rotate the ticket with `PUT /v2/realtime/ticket` and revoke the family with
+`DELETE /v2/realtime/ticket`. Neither takes the bearer; the ticket is the credential.
 
 ## Step 4: read-only sanity check
 
@@ -188,11 +187,10 @@ Reads need the bearer only. They do not need the Party binding.
 
 ```text
 // pseudocode, in memory only
-markets  = fetch(origin + "/v1/markets")                                   // public
-account  = fetch(origin + "/v1/accounts/" + session.accountId, auth)       // bearer header
-open     = fetch(origin + "/v1/accounts/" + session.accountId + "/orders/open", auth)
-report({ markets: markets.status, account: account.status, openOrders: open.status,
-         marketCount: markets.body.markets.length, openOrderCount: open.body.orders.length })
+markets  = fetch(origin + "/v2/markets")                                   // public
+account  = fetch(origin + "/v2/accounts/" + session.accountId, auth)       // bearer header
+open     = fetch(origin + "/v2/accounts/" + session.accountId + "/orders/open", auth)
+report({ markets: markets.status, account: account.status, openOrders: open.status })
 ```
 
 Summarize balances, margin and equity for the owner in words. Stop here unless the owner asks
@@ -204,12 +202,12 @@ Check first:
 
 ```text
 // pseudocode, in memory only
-party = fetch(origin + "/v1/accounts/" + session.accountId + "/party", auth)
+party = fetch(origin + "/v2/accounts/" + session.accountId + "/party", auth)
 report({ status: party.status, partyStatus: party.body.status })   // never the partyId
 ```
 
-The response is `dfns-party-onboarding/v1` with `status` in `not_started`, `generated`, `signing`,
-`submitted`, `active` or `failed`.
+The response reports `status` in `not_started`, `generated`, `signing`, `submitted`, `active` or
+`failed`.
 
 - `active`: the binding exists. Reuse it. Do not call the init route. Go to step 6.
 - `submitted`: the venue is still reconciling. Read the status again later. Do not init again.
@@ -218,18 +216,17 @@ The response is `dfns-party-onboarding/v1` with `status` in `not_started`, `gene
 **Secure setup (human).** Login alone does not authorize this write. Each challenge is a DFNS
 User Action that the owner approves with the passkey.
 
-1. `POST /v1/accounts/{accountId}/party` with the bearer. The venue resolves the owner's delegated
+1. `POST /v2/accounts/{accountId}/party` with the bearer. The venue resolves the owner's delegated
    signing key and returns one or more passkey challenges. Development returns three. An already
    active account returns its binding with no new challenges. No `Idempotency-Key` is needed.
 2. **Human:** approve every challenge in the browser, in order.
-3. `POST /v1/accounts/{accountId}/party/complete` with the signed proofs.
-4. **Human:** when the venue asks for it, `POST /v1/accounts/{accountId}/party/consent` does the
-   nonfinancial Party setup:
-   account acceptance, receiver consent and, where the venue offers the bridge, the bridge
-   agreement request. Each command needs one owner signature, with the passkey or with the setup
-   key from sign-up. The setup key approves only these Party setup commands of the owner's own
-   account. A key never reaches this route.
-5. `GET /v1/accounts/{accountId}/party` again. Continue only when `status` is `active`.
+3. `POST /v2/accounts/{accountId}/party/complete` with the signed proofs.
+4. **Human:** when the venue asks for it, `POST /v2/accounts/{accountId}/party/consent` does the
+   nonfinancial Party setup: account acceptance, receiver consent and, where the venue offers the
+   bridge, the bridge agreement request. Each command needs one owner signature, with the passkey
+   or with the setup key from sign-up. The setup key approves only these Party setup commands of
+   the owner's own account. A key never reaches this route.
+5. `GET /v2/accounts/{accountId}/party` again. Continue only when `status` is `active`.
 
 There is no Party selector and no caller-supplied Party id. There is no route that binds a Party
 before login; the binding requires the bearer from step 2.
@@ -238,13 +235,14 @@ before login; the binding requires the bearer from step 2.
 
 Only after steps 0 to 5 pass, and only on an explicit owner instruction naming the action:
 
-1. `POST /v1/orders/preview` with the intended order. It reserves nothing and needs no
+1. `POST /v2/orders/preview` with the intended order. It reserves nothing and needs no
    `Idempotency-Key`.
 2. Show the preview. Wait for a "yes".
-3. `POST /v1/orders` with a fresh `Idempotency-Key` header. Send that header on every route
-   where the live contract marks it required. Required body fields: `accountId`, `marketId`, `clientOrderId`, `side`, `orderType`,
-   and `quantity` or `notional`; a limit order also needs `price`. The response is accepted for
-   asynchronous processing; watch `account.orders` on the WebSocket for the outcome.
+3. `POST /v2/spot/order`, `POST /v2/perps/order` or `POST /v2/order` with a fresh `Idempotency-Key`
+   header. Send that header on every route where the live contract marks it required. Check the
+   live `GET /openapi.json` for required fields (`symbol`, `side`, `type`, `amount`, `price` for
+   limit orders, and `clientOrderId`). The response is accepted for asynchronous processing; watch
+   `account.orders` on the WebSocket for the outcome.
 
 Deposits and withdrawals are owner-signed DFNS actions and need separate explicit permission. See
 the funding section of [CAPABILITIES.md](CAPABILITIES.md).
@@ -255,8 +253,8 @@ Read the current limits in the docs ("Rate limits and back-pressure" in
 <https://docs.edel.finance/developers/introduction>) and in each route description. At the time
 of writing the docs say: public auth is limited to 20 requests per 60 seconds per trusted client
 IP, and a venue allows 600 authenticated requests per 60 seconds by default.
-- Failures use `external-rest-error/v1`: `code`, `safeMessage`, `retryable`, `recoveryActions`,
-  `requestId`. Report `code`, `retryable`, `recoveryActions` and `requestId` only.
+- Failures return `code`, `safeMessage`, `retryable`, `recoveryActions` and `requestId`. Report
+  `code`, `retryable`, `recoveryActions` and `requestId` only.
 
 | HTTP | Classify as | Then |
 | --- | --- | --- |

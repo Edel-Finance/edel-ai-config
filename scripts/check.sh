@@ -29,9 +29,9 @@ while [ $# -gt 0 ]; do
 done
 start='"connectCode":"cc_1","verificationUrl":"https://dev.example/connect","userCode":"ABCD-1234"'
 case "$FAKE_CASE:$url" in
-  interval:*/v1/agent-connect/start) printf '{%s,"intervalSeconds":"PATH[$(touch %s)]","expiresInSeconds":5}\n201' "$start" "$FAKE_MARKER" ;;
-  expires:*/v1/agent-connect/start) printf '{%s,"intervalSeconds":1,"expiresInSeconds":"PATH[$(touch %s)]"}\n201' "$start" "$FAKE_MARKER" ;;
-  missing:*/v1/agent-connect/start) printf '{"verificationUrl":"https://dev.example/connect","userCode":"ABCD-1234","intervalSeconds":1,"expiresInSeconds":5}\n201' ;;
+  interval:*/v2/agent-connect/start) printf '{%s,"intervalSeconds":"PATH[$(touch %s)]","expiresInSeconds":5}\n201' "$start" "$FAKE_MARKER" ;;
+  expires:*/v2/agent-connect/start) printf '{%s,"intervalSeconds":1,"expiresInSeconds":"PATH[$(touch %s)]"}\n201' "$start" "$FAKE_MARKER" ;;
+  missing:*/v2/agent-connect/start) printf '{"verificationUrl":"https://dev.example/connect","userCode":"ABCD-1234","intervalSeconds":1,"expiresInSeconds":5}\n201' ;;
   notools:*/ready | nokey:*/ready) printf '{"status":"ok"}' ;;
   nokey:https://mcp.edel-api.xyz/mcp) printf '{"reason":"unauthorized","nextTool":"edel_connect"}\n401' ;;
   notools:*/mcp)

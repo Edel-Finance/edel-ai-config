@@ -54,9 +54,15 @@ def main():
         text = doc.read_text(encoding="utf-8")
         rel = doc.relative_to(ROOT_DIR)
         for tool in sorted(set(TOOL_RE.findall(text))):
+            if "kyc" in tool.lower():
+                missing.append(f"{rel}: MCP tool {tool} references deprecated KYC")
             if tool not in known_tools:
                 missing.append(f"{rel}: MCP tool {tool} is not on {MCP_TOOLS_URL}")
         for method, path in sorted(set(ROUTE_RE.findall(text))):
+            if path.startswith("/v1/"):
+                missing.append(f"{rel}: route {method} {path} uses legacy /v1/ instead of /v2/")
+            if "/kyc" in path.lower():
+                missing.append(f"{rel}: route {method} {path} references deprecated KYC")
             route = f"{method} {normalize(path)}"
             if route not in known_routes:
                 missing.append(f"{rel}: route {method} {path} is not in {OPENAPI_URL}")

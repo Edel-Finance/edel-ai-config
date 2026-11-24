@@ -7,8 +7,8 @@
 #   keychain  saves the key in the macOS login Keychain, service edel-mcp-<environment>.
 #   scopes    comma separated, default read. Add a scope only if the live contract lists it and you need it.
 #
-# It runs the public device grant: POST /v1/agent-connect/start, then you approve the printed code
-# in your own browser with your passkey, then POST /v1/agent-connect/complete returns the key once.
+# It runs the public device grant: POST /v2/agent-connect/start, then you approve the printed code
+# in your own browser with your passkey, then POST /v2/agent-connect/complete returns the key once.
 # This script never opens a browser. The key and the connect code travel on stdin only, never on a
 # command line, and are never printed.
 set +x
@@ -89,7 +89,7 @@ post() {
 
 IFS=' ' read -r -a scope_values <<<"${scopes//,/ }"
 scope_list=$(printf '"%s",' "${scope_values[@]}")
-answer=$(printf '{"clientName":"edel-ai-config","scopes":[%s]}' "${scope_list%,}" | post /v1/agent-connect/start)
+answer=$(printf '{"clientName":"edel-ai-config","scopes":[%s]}' "${scope_list%,}" | post /v2/agent-connect/start)
 status=${answer##*$'\n'}
 body=${answer%$'\n'*}
 if [ "$status" != 201 ]; then
@@ -115,7 +115,7 @@ deadline=$((SECONDS + expires))
 api_key=""
 while [ "$SECONDS" -lt "$deadline" ]; do
   sleep "$interval"
-  answer=$(printf '{"connectCode":"%s"}' "$connect_code" | post /v1/agent-connect/complete)
+  answer=$(printf '{"connectCode":"%s"}' "$connect_code" | post /v2/agent-connect/complete)
   status=${answer##*$'\n'}
   body=${answer%$'\n'*}
   case "$(field status "$body")" in

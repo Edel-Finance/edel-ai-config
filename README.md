@@ -23,8 +23,8 @@ profile before starting your agent client. Test a new client on TestNet or Devel
 
 Each package was installed into a throwaway home or config folder, never the global config. Every
 MCP package reaches the public MCP and gets the documented `401` with `nextTool: edel_connect`
-until you approve your own key. On 2026-11-06 a public read (`GET /v1/markets`) returned 13 markets
-on MainNet, 14 on TestNet and 16 on Development. Status: tested means installed and run with the
+until you approve your own key. A public read (`GET /v2/markets`) returns the live markets
+on MainNet, TestNet and Development. Status: tested means installed and run with the
 real CLI; structure-checked means checked against the platform's published format because its CLI
 is not on the test machine. The `edel-mainnet` server was added on 2026-11-06 with the same URL and
 header shape as the test venues. `scripts/smoke.sh mainnet` gets the documented `401`; the
@@ -210,10 +210,10 @@ ChatGPT cannot connect to the Edel MCP yet, because it does not send API keys.
 npx skills add Edel-Finance/edel-ai-config --skill edel-markets
 ```
 
-This adds one skill, `edel-markets`, to your agent. It covers every public Edel PERPS capability:
-REST, CCXT `/v2`, WebSockets, MCP tools, strategy agents, deposits and withdrawals. The skill
-reads `skills/edel-markets/AUTH.md` before any private call and finds each capability in
-`skills/edel-markets/CAPABILITIES.md`.
+This adds one skill, `edel-markets`, to your agent. It covers every public Edel capability
+(Spot, Perps, Common, and Organizations/Partners): REST `/v2`, WebSockets, MCP tools, strategy
+agents, deposits and withdrawals. The skill reads `skills/edel-markets/AUTH.md` before any private
+call and finds each capability in `skills/edel-markets/CAPABILITIES.md`.
 
 ## Generic MCP config and smoke test
 

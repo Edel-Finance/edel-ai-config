@@ -1,13 +1,14 @@
 ---
 name: edel-markets
-description: "Trigger: any task that reads or trades on Edel PERPS through the public REST, WebSocket or MCP API."
+description: "Trigger: any task that reads or trades Spot or Perps on Edel through the public REST v2, WebSocket or MCP API."
 homepage: https://docs.edel.finance/developers/mcp/connect
 ---
 
 ## Activation Contract
 
-Use this skill for any Edel PERPS public surface on MainNet, TestNet or Development: REST, CCXT,
-WebSockets, MCP tools, strategy agents and funding. Admin, operator and internal bot-control surfaces are out of scope.
+Use this skill for any Edel public surface on MainNet, TestNet or Development: Spot, Perps, Common
+and Organizations/Partners over REST `/v2`, CCXT, WebSockets, MCP tools, strategy agents and
+funding. Admin, operator and internal bot-control surfaces are out of scope.
 
 ## Source of truth
 
@@ -26,7 +27,7 @@ Never state a limit, scope, field or status from memory. Quote the route descrip
 - Use the origins of one venue only. [AUTH.md](https://github.com/Edel-Finance/edel-ai-config/blob/main/skills/edel-markets/AUTH.md) lists them per environment.
 - Connect with an owner-approved API key. Never ask for a passkey or a DFNS credential.
 - Never place, cancel, deposit or withdraw without an explicit owner instruction for that
-  action. Preview an order with `POST /v1/orders/preview` first.
+  action. Preview an order with `POST /v2/orders/preview` first.
 - A key never signs. A passkey prompt or DFNS User Action is a human step in a browser.
 - Keep credentials and Party identifiers out of argv, logs and chat. Only the API key goes in
   a file only you can read. Report only status, booleans, `code`, `retryable`, `requestId`.
@@ -53,7 +54,7 @@ Never state a limit, scope, field or status from memory. Quote the route descrip
 
 ## Execution Steps
 
-1. Pick the venue with the owner. Read its `/openapi.json` and `GET /v1/auth/capabilities`.
+1. Pick the venue with the owner. Read its `/openapi.json` and `GET /v2/auth/capabilities`.
 2. Complete AUTH.md with the human: identity, key or login, account id, reads.
 3. Find the capability in [CAPABILITIES.md](https://github.com/Edel-Finance/edel-ai-config/blob/main/skills/edel-markets/CAPABILITIES.md). Open its docs page and its route
    description in the live contract.

@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Edel PERPS public market data",
-    "version": "1.0.0",
-    "description": "Read-only public routes of the Edel PERPS REST API. Source of truth: GET /openapi.json on the same origin."
+    "title": "Edel public market data (v2)",
+    "version": "2.0.0",
+    "description": "Read-only public v2 routes of the Edel REST API (Spot, Perps and Common). Source of truth: GET /openapi.json on the same origin."
   },
   "servers": [
     {
@@ -12,9 +12,9 @@
     }
   ],
   "paths": {
-    "/v1/system/status": {
+    "/v2/system/status": {
       "get": {
-        "operationId": "getSystemStatus",
+        "operationId": "getSystemStatusV2",
         "summary": "Get the venue status",
         "security": [],
         "responses": {
@@ -24,9 +24,9 @@
         }
       }
     },
-    "/v1/auth/capabilities": {
+    "/v2/auth/capabilities": {
       "get": {
-        "operationId": "getAuthCapabilities",
+        "operationId": "getAuthCapabilitiesV2",
         "summary": "Get authentication capabilities",
         "security": [],
         "responses": {
@@ -36,10 +36,10 @@
         }
       }
     },
-    "/v1/markets": {
+    "/v2/markets": {
       "get": {
-        "operationId": "listMarkets",
-        "summary": "List markets",
+        "operationId": "ccxtV2FetchMarkets",
+        "summary": "List all Spot and Perps markets (CCXT shape)",
         "security": [],
         "responses": {
           "200": {
@@ -48,9 +48,69 @@
         }
       }
     },
-    "/v1/leaderboard": {
+    "/v2/spot/markets": {
       "get": {
-        "operationId": "getLeaderboard",
+        "operationId": "ccxtV2FetchMarketsSpot",
+        "summary": "List Spot markets (CCXT shape)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        }
+      }
+    },
+    "/v2/perps/markets": {
+      "get": {
+        "operationId": "ccxtV2FetchMarketsPerps",
+        "summary": "List Perps markets (CCXT shape)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        }
+      }
+    },
+    "/v2/currencies": {
+      "get": {
+        "operationId": "ccxtV2FetchCurrencies",
+        "summary": "List supported currencies (CCXT shape)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        }
+      }
+    },
+    "/v2/tickers": {
+      "get": {
+        "operationId": "ccxtV2FetchTickers",
+        "summary": "Get tickers for all or selected markets (CCXT shape)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        },
+        "parameters": [
+          {
+            "name": "symbols",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Optional comma-separated CCXT symbols. Omit it for every tradable market."
+          }
+        ]
+      }
+    },
+    "/v2/leaderboard": {
+      "get": {
+        "operationId": "getLeaderboardV2",
         "summary": "Get the projected realized-PnL leaderboard",
         "security": [],
         "responses": {
@@ -126,9 +186,9 @@
         ]
       }
     },
-    "/v1/markets/{marketId}": {
+    "/v2/markets/{marketId}": {
       "get": {
-        "operationId": "getMarketSnapshot",
+        "operationId": "getMarketSnapshotV2",
         "summary": "Get a market snapshot",
         "security": [],
         "responses": {
@@ -142,16 +202,17 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1
             }
           }
         ]
       }
     },
-    "/v1/markets/{marketId}/stats": {
+    "/v2/markets/{symbol}/stats": {
       "get": {
-        "operationId": "getMarketStats",
-        "summary": "Get market stats",
+        "operationId": "ccxtV2FetchTickerAndFundingRate",
+        "summary": "Get market ticker and funding rate (CCXT shape)",
         "security": [],
         "responses": {
           "200": {
@@ -160,20 +221,21 @@
         },
         "parameters": [
           {
-            "name": "marketId",
+            "name": "symbol",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1
             }
           }
         ]
       }
     },
-    "/v1/markets/{marketId}/book": {
+    "/v2/markets/{symbol}/book": {
       "get": {
-        "operationId": "getMarketBook",
-        "summary": "Get the order book",
+        "operationId": "ccxtV2FetchOrderBook",
+        "summary": "Get the order book (CCXT shape)",
         "security": [],
         "responses": {
           "200": {
@@ -182,52 +244,50 @@
         },
         "parameters": [
           {
-            "name": "marketId",
+            "name": "symbol",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/v1/markets/{marketId}/candles": {
-      "get": {
-        "operationId": "getMarketCandles",
-        "summary": "Get market candles",
-        "security": [],
-        "responses": {
-          "200": {
-            "description": "Success. The body follows the live OpenAPI document."
-          }
-        },
-        "parameters": [
-          {
-            "name": "marketId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1
             }
           },
           {
-            "name": "series",
+            "name": "limit",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "enum": [
-                "trade",
-                "index",
-                "mark"
-              ],
-              "default": "index"
+              "type": "integer",
+              "maximum": 500,
+              "default": 100
             },
-            "description": "Candle source series. Defaults to index. series=mark is declared but not served yet: HTTP 400 operation_not_available, retryable=false."
+            "description": "Maximum levels per side, from 1 to 500. Defaults to 100."
+          }
+        ]
+      }
+    },
+    "/v2/markets/{symbol}/candles": {
+      "get": {
+        "operationId": "ccxtV2FetchOhlcv",
+        "summary": "Get market OHLCV candles (CCXT shape)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        },
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
           },
           {
-            "name": "tf",
+            "name": "timeframe",
             "in": "query",
             "required": false,
             "schema": {
@@ -250,29 +310,134 @@
               ],
               "default": "1m"
             },
-            "description": "Candle timeframe. Defaults to 1m. Unknown timeframes return HTTP 400 invalid_request."
+            "description": "CCXT unified timeframe. Defaults to 1m."
           },
           {
-            "name": "from",
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Optional inclusive Unix timestamp in integer milliseconds."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "default": 100
+            },
+            "description": "Maximum number of candles, from 1 to 100. Defaults to 100."
+          },
+          {
+            "name": "series",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
-              "pattern": "^[0-9]+$"
+              "enum": [
+                "trade",
+                "index",
+                "mark"
+              ]
             },
-            "description": "Optional inclusive nonnegative safe-integer epoch-millisecond string for the start of [from, to); align to the timeframe boundary."
+            "description": "Candle source series. Defaults to index."
           },
           {
-            "name": "to",
+            "name": "price",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
-              "pattern": "^[0-9]+$"
+              "enum": [
+                "mid"
+              ]
             },
-            "description": "Optional exclusive nonnegative safe-integer epoch-millisecond string for the end of [from, to); align to the timeframe boundary."
+            "description": "Optional CCXT price series selector. Send mid for order book mid candles."
           }
         ]
+      }
+    },
+    "/v2/markets/{symbol}/trades": {
+      "get": {
+        "operationId": "ccxtV2FetchTrades",
+        "summary": "Get recent public trades (CCXT shape)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        },
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Optional epoch milliseconds for the oldest trades at or after since."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "default": 50
+            },
+            "description": "Maximum trades, from 1 to 100. Defaults to 50."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Optional pagination cursor from a previous trade."
+          }
+        ]
+      }
+    },
+    "/v2/venue/totals": {
+      "get": {
+        "operationId": "getVenueTotals",
+        "summary": "Get venue totals",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        }
+      }
+    },
+    "/v2/venue/collateral": {
+      "get": {
+        "operationId": "getVenueCollateral",
+        "summary": "Get venue collateral units",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. The body follows the live OpenAPI document."
+          }
+        }
       }
     }
   }
