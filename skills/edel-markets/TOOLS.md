@@ -13,86 +13,111 @@ but the TestNet venue does not serve its route today: treat it as unavailable th
 | Tool | REST operations |
 | --- | --- |
 | `edel_account` | `GET /v1/accounts/{accountId}` |
-| `edel_affiliate_availability` | `GET /v1/affiliate/availability` |
-| `edel_agent_actions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/actions` |
-| `edel_agent_backtest` | `POST /v1/accounts/{accountId}/agents/backtest` |
-| `edel_agent_chat` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/chat` |
-| `edel_agent_chat_messages` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/chat` |
-| `edel_agent_chat_presets` | `GET /v1/agents/chat-presets` |
-| `edel_agent_close` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/close-position` |
-| `edel_agent_command` | `POST /v1/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v1/accounts/{accountId}/agents/{deploymentId}/activate`, `DELETE /v1/accounts/{accountId}/agents/{deploymentId}` |
-| `edel_agent_deploy` | `POST /v1/accounts/{accountId}/agents` |
-| `edel_agent_estimate_scenario` | `POST /v1/agents/strategy-estimate-scenarios` |
-| `edel_agent_fees` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fees` |
-| `edel_agent_fill_decision` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fills/{tradeId}/decision` |
-| `edel_agent_fills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/fills` |
-| `edel_agent_fund` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/test-funding` |
-| `edel_agent_fund_confirm` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/fundings/{transferId}/confirm` |
-| `edel_agent_fund_prepare` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/fundings` |
-| `edel_agent_market_selection` | `GET /v1/agents/market-selection` |
-| `edel_agent_model` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/model` |
-| `edel_agent_models` | `GET /v1/agents/models` |
-| `edel_agent_money_estimates` | `GET /v1/agents/strategy-estimates` |
-| `edel_agent_orders` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/orders` |
-| `edel_agent_performance` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/performance` |
-| `edel_agent_pine` | `POST /v1/accounts/{accountId}/agents/pine` |
-| `edel_agent_positions` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/positions` |
-| `edel_agent_rename` | `PUT /v1/accounts/{accountId}/agents/{deploymentId}/name` |
-| `edel_agent_skills` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/skills` |
-| `edel_agent_strategies` | `GET /v1/agents/strategies` |
-| `edel_agent_strategy` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/strategy` |
-| `edel_agent_wallet` | `GET /v1/accounts/{accountId}/agents/{deploymentId}/wallet` |
-| `edel_agent_withdraw` | `POST /v1/accounts/{accountId}/agent-accounts/{agentAccountId}/returns` |
-| `edel_agents` | `GET /v1/accounts/{accountId}/agents` |
-| `edel_campaign_earnings` | `GET /v1/accounts/{accountId}/campaign-earnings` |
-| `edel_campaigns` | `GET /v1/accounts/{accountId}/campaigns` |
-| `edel_cancel_all_orders` | `POST /v2/orders/cancel-all` |
+| `edel_affiliate_availability` | `GET /v2/affiliate/availability` |
+| `edel_agent_actions` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/actions` |
+| `edel_agent_backtest` | `POST /v2/accounts/{accountId}/agents/backtest` |
+| `edel_agent_chat` | `POST /v2/accounts/{accountId}/agents/{deploymentId}/chat` |
+| `edel_agent_chat_messages` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/chat` |
+| `edel_agent_chat_presets` | `GET /v2/agents/chat-presets` |
+| `edel_agent_close` | `POST /v2/accounts/{accountId}/agents/{deploymentId}/close-position` |
+| `edel_agent_command` | `POST /v2/accounts/{accountId}/agents/{deploymentId}/pause`, `POST /v2/accounts/{accountId}/agents/{deploymentId}/resume`, `POST /v2/accounts/{accountId}/agents/{deploymentId}/activate`, `DELETE /v2/accounts/{accountId}/agents/{deploymentId}` |
+| `edel_agent_deploy` | `POST /v2/accounts/{accountId}/agents` |
+| `edel_agent_estimate_scenario` | `POST /v2/agents/strategy-estimate-scenarios` |
+| `edel_agent_fees` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/fees` |
+| `edel_agent_fill_decision` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/fills/{tradeId}/decision` |
+| `edel_agent_fills` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/fills` |
+| `edel_agent_fund` | `POST /v2/accounts/{accountId}/agent-accounts/{agentAccountId}/test-funding` |
+| `edel_agent_fund_confirm` | `POST /v2/accounts/{accountId}/agent-accounts/{agentAccountId}/fundings/{transferId}/confirm` |
+| `edel_agent_fund_prepare` | `POST /v2/accounts/{accountId}/agent-accounts/{agentAccountId}/fundings` |
+| `edel_agent_market_selection` | `GET /v2/agents/market-selection` |
+| `edel_agent_model` | `PUT /v2/accounts/{accountId}/agents/{deploymentId}/model` |
+| `edel_agent_models` | `GET /v2/agents/models` |
+| `edel_agent_money_estimates` | `GET /v2/agents/strategy-estimates` |
+| `edel_agent_orders` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/orders` |
+| `edel_agent_performance` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/performance` |
+| `edel_agent_pine` | `POST /v2/accounts/{accountId}/agents/pine` |
+| `edel_agent_positions` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/positions` |
+| `edel_agent_rename` | `PUT /v2/accounts/{accountId}/agents/{deploymentId}/name` |
+| `edel_agent_skills` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/skills` |
+| `edel_agent_strategies` | `GET /v2/agents/strategies` |
+| `edel_agent_strategy` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/strategy` |
+| `edel_agent_wallet` | `GET /v2/accounts/{accountId}/agents/{deploymentId}/wallet` |
+| `edel_agent_withdraw` | `POST /v2/accounts/{accountId}/agent-accounts/{agentAccountId}/returns` |
+| `edel_agents` | `GET /v2/accounts/{accountId}/agents` |
+| `edel_campaign_earnings` | `GET /v2/accounts/{accountId}/campaign-earnings` |
+| `edel_campaigns` | `GET /v2/accounts/{accountId}/campaigns` |
+| `edel_cancel_all_orders` | `POST /v2/spot/orders/cancel-all`, `POST /v2/perps/orders/cancel-all` |
 | `edel_cancel_order` | `POST /v1/orders/{orderId}/cancel` |
 | `edel_cancel_order_batch` | `POST /v1/orders/batch/cancel` |
-| `edel_candidate_markets` | `GET /v1/market-data/candidate-markets` |
+| `edel_cancel_spot_order` | `POST /v2/spot/orders/{orderId}/cancel`, `POST /v2/perps/orders/{orderId}/cancel` |
+| `edel_candidate_markets` | `GET /v2/market-data/candidate-markets` |
 | `edel_candles` | `GET /v1/markets/{marketId}/candles` |
 | `edel_close_position` | `GET /v1/accounts/{accountId}/positions`, `POST /v1/orders` |
-| `edel_connect` | `POST /v1/agent-connect/start`, `POST /v1/agent-connect/complete`, `GET /v1/api-keys/current` |
-| `edel_deposit` | `POST /v1/accounts/{accountId}/deposits` |
+| `edel_connect` | `POST /v2/agent-connect/start`, `POST /v2/agent-connect/complete`, `GET /v2/api-keys/current` |
+| `edel_create_listing_request` | `POST /v2/accounts/{accountId}/listing-requests` |
+| `edel_create_order` | `POST /v2/spot/order`, `POST /v2/perps/order` |
+| `edel_create_twap_order` | `POST /v2/spot/twap-orders` |
+| `edel_deposit` | `POST /v2/accounts/{accountId}/deposits` |
 | `edel_deposit_capabilities` | `GET /v2/accounts/{accountId}/deposit-capabilities` |
-| `edel_deposit_confirm` | `POST /v1/accounts/{accountId}/deposits/confirm` |
-| `edel_faucet_grant` | `POST /v1/accounts/{accountId}/faucet-grant` |
-| `edel_fee_ladder` | `GET /v1/fee-tiers` |
-| `edel_fee_share_accept` | `POST /v1/accounts/{accountId}/fee-share-offers/{offerId}/accept` |
-| `edel_fee_share_offers` | `GET /v1/accounts/{accountId}/fee-share-offers` |
-| `edel_fee_tier` | `GET /v1/accounts/{accountId}/fee-tier` |
-| `edel_funding` | `GET /v1/accounts/{accountId}/positions/history` |
-| `edel_funding_intents` | `GET /v1/accounts/{accountId}/local-signing-funding-intents` |
-| `edel_kyc_status` | `GET /v1/accounts/{accountId}/kyc` |
+| `edel_deposit_confirm` | `POST /v2/accounts/{accountId}/deposits/confirm` |
+| `edel_edit_order` | `POST /v2/spot/orders/{orderId}/edit`, `POST /v2/perps/orders/{orderId}/edit` |
+| `edel_edit_orders` | `POST /v2/spot/orders/edit`, `POST /v2/perps/orders/edit` |
+| `edel_faucet_grant` | `POST /v2/accounts/{accountId}/faucet-grant` |
+| `edel_fee_ladder` | `GET /v2/fee-tiers` |
+| `edel_fee_share_accept` | `POST /v2/accounts/{accountId}/fee-share-offers/{offerId}/accept` |
+| `edel_fee_share_offers` | `GET /v2/accounts/{accountId}/fee-share-offers` |
+| `edel_fee_tier` | `GET /v2/accounts/{accountId}/fee-tier` |
+| `edel_fetch_balance` | `GET /v2/accounts/{accountId}` |
+| `edel_fetch_currencies` | `GET /v2/currencies` |
+| `edel_fetch_markets` | `GET /v2/spot/markets`, `GET /v2/perps/markets` |
+| `edel_fetch_my_trades` | `GET /v2/spot/accounts/{accountId}/fills`, `GET /v2/perps/accounts/{accountId}/fills` |
+| `edel_fetch_ohlcv` | `GET /v2/spot/markets/{symbol}/candles`, `GET /v2/perps/markets/{symbol}/candles` |
+| `edel_fetch_open_orders` | `GET /v2/spot/accounts/{accountId}/orders/open`, `GET /v2/perps/accounts/{accountId}/orders/open` |
+| `edel_fetch_order` | `GET /v2/spot/orders/{orderId}`, `GET /v2/perps/orders/{orderId}` |
+| `edel_fetch_order_book` | `GET /v2/spot/markets/{symbol}/book`, `GET /v2/perps/markets/{symbol}/book` |
+| `edel_fetch_orders` | `GET /v2/spot/accounts/{accountId}/orders`, `GET /v2/perps/accounts/{accountId}/orders` |
+| `edel_fetch_ticker` | `GET /v2/spot/markets/{symbol}/stats`, `GET /v2/perps/markets/{symbol}/stats` |
+| `edel_fetch_tickers` | `GET /v2/spot/tickers`, `GET /v2/perps/tickers` |
+| `edel_fetch_trades` | `GET /v2/spot/markets/{symbol}/trades`, `GET /v2/perps/markets/{symbol}/trades` |
+| `edel_fetch_trading_fees` | `GET /v2/spot/trading-fees`, `GET /v2/perps/trading-fees` |
+| `edel_funding` | `GET /v2/accounts/{accountId}/positions/history` |
+| `edel_funding_intents` | `GET /v2/accounts/{accountId}/local-signing-funding-intents` |
+| `edel_kyc_status` | `GET /v2/accounts/{accountId}/kyc` |
 | `edel_leaderboard` | `GET /v1/leaderboard` |
-| `edel_market` | `GET /v1/markets/{marketId}` |
-| `edel_market_tickers` | `GET /v2/tickers` |
-| `edel_market_trades` | `GET /v2/markets/{symbol}/trades` |
+| `edel_listing_request_deposit` | `GET /v2/accounts/{accountId}/listing-requests/{requestId}/deposit` |
+| `edel_listing_request_deposit_confirm` | `POST /v2/accounts/{accountId}/listing-requests/{requestId}/deposit/confirm` |
+| `edel_listing_requests` | `GET /v2/accounts/{accountId}/listing-requests` |
+| `edel_market` | `GET /v2/markets/{marketId}` |
+| `edel_market_tickers` | `GET /v2/spot/tickers`, `GET /v2/perps/tickers` |
+| `edel_market_trades` | `GET /v2/spot/markets/{symbol}/trades`, `GET /v2/perps/markets/{symbol}/trades` |
 | `edel_markets` | `GET /v1/markets` |
-| `edel_me` | `GET /v1/me` |
+| `edel_me` | `GET /v2/me` |
 | `edel_order` | `GET /v1/orders/{orderId}` |
 | `edel_order_history` | `GET /v1/accounts/{accountId}/orders` |
 | `edel_orders` | `GET /v1/accounts/{accountId}/orders/open` |
-| `edel_passkeys` | `GET /v1/accounts/{accountId}/passkeys` |
+| `edel_passkeys` | `GET /v2/accounts/{accountId}/passkeys` |
 | `edel_place_order` | `POST /v1/orders` |
 | `edel_place_order_batch` | `POST /v1/orders/batch` |
-| `edel_position_history` | `GET /v1/accounts/{accountId}/positions/history` |
+| `edel_portfolio_history` | `GET /v2/accounts/{accountId}/portfolio/history` |
+| `edel_position_history` | `GET /v2/accounts/{accountId}/positions/history` |
 | `edel_positions` | `GET /v1/accounts/{accountId}/positions` |
-| `edel_preview_order` | `POST /v1/orders/preview` |
+| `edel_preview_order` | `POST /v2/orders/preview` |
 | `edel_price` | `GET /v1/markets/{marketId}/stats`, `GET /v1/markets/{marketId}/book` |
+| `edel_referral_code_status` | `GET /v2/affiliate/referral-codes/{code}` |
 | `edel_replace_order` | `POST /v1/orders/{orderId}/replace` |
-| `edel_squid_quote` | `POST /v1/accounts/{accountId}/squid-quote` |
-| `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v1/accounts/{accountId}/party` |
+| `edel_squid_quote` | `POST /v2/accounts/{accountId}/squid-quote` |
+| `edel_status` | `GET /v1/accounts/{accountId}`, `GET /v2/accounts/{accountId}/party` |
 | `edel_system_status` | `GET /v1/system/status` |
-| `edel_terms` | `GET /v1/accounts/{accountId}/terms` |
+| `edel_terms` | `GET /v2/accounts/{accountId}/terms` |
 | `edel_trade_history` | `GET /v1/accounts/{accountId}/fills` |
-| `edel_transfers` | `GET /v1/accounts/{accountId}/transfers` |
-| `edel_treasury_credits` | `GET /v1/accounts/{accountId}/treasury-credits` |
+| `edel_transfers` | `GET /v2/accounts/{accountId}/transfers` |
+| `edel_treasury_credits` | `GET /v2/accounts/{accountId}/treasury-credits` |
+| `edel_upcoming_markets` | `GET /v2/markets/upcoming` |
 | `edel_venue_collateral` | `GET /v2/venue/collateral` |
 | `edel_venue_totals` | `GET /v2/venue/totals` |
-| `edel_withdraw` | `GET /v1/accounts/{accountId}/party`, `POST /v1/withdrawals` |
-| `edel_withdrawal` | `GET /v1/withdrawals/{withdrawalId}` |
-| `edel_withdrawal_confirm` | `POST /v1/withdrawals/{withdrawalId}/confirm` |
-| `edel_withdrawal_party_transfer` | `POST /v1/withdrawals/{withdrawalId}/party-transfer` |
-| `edel_withdrawal_settle` | `GET /v1/withdrawals/{withdrawalId}`, `POST /v1/withdrawals/{withdrawalId}/authorize` |
-| `edel_xreserve_deposit` | `GET /v1/accounts/{accountId}/xreserve-deposit` |
+| `edel_withdraw` | `GET /v2/accounts/{accountId}/party`, `POST /v2/withdrawals` |
+| `edel_withdrawal` | `GET /v2/withdrawals/{withdrawalId}` |
+| `edel_withdrawal_confirm` | `POST /v2/withdrawals/{withdrawalId}/confirm` |
+| `edel_withdrawal_party_transfer` | `POST /v2/withdrawals/{withdrawalId}/party-transfer` |
+| `edel_withdrawal_settle` | `GET /v2/withdrawals/{withdrawalId}`, `POST /v2/withdrawals/{withdrawalId}/authorize` |
+| `edel_xreserve_deposit` | `GET /v2/accounts/{accountId}/xreserve-deposit` |
